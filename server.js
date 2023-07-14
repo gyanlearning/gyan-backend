@@ -24,6 +24,9 @@ app.use("/api",UserRoute)
 app.use(express.json());
 app.use(cors({origin:"http://localhost:3000",credentials:true }));
 app.use(cookieParser())
+app.get("/",(req,res)=>{
+  res.send("hello")
+})
 app.listen(port,()=>{
 console.log(`Server is running on : localhost://${port}`)
 })
