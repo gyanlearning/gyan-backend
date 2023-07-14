@@ -1,21 +1,30 @@
 const User=require("../model/User_model");
 const bcryptJs=require("bcrypt");
-const twilio = require('twilio');
 const otplib=require("otplib")
 const secret = otplib.authenticator.generateSecret();
 const token = otplib.authenticator.generate(secret);
-// const fast2sms = require("fast-two-sms");
-
-const { SendOtp, generateOTP } = require("../utils/otp.util");
+const { SendOtp} = require("../utils/otp.util");
 
 const Login=async (req,res)=>{
-   
-
    try {
    //const hashNumber=await bcryptJs.hash(req.body.mobile,10);
-   
-   
-   
+   if(await User.findOne({mobile:req.body.mobile})){
+    const token = otplib.authenticator.generate(secret);
+    User.findOneAndUpdate(
+      {mobile:req.body.mobile},
+       { otp: token, otpExpiresAt: new Date(Date.now() + 10 * 60 * 1000) },
+       { new: true } // To return the updated document
+     )
+       .then(updatedUser => {
+        res.status(200).json({ message: 'OTP sent successfully' });
+       })
+       .catch(error => {
+        res.status(501).json({ message: 'OTP cannot send,internal server error ' });
+       });
+       await SendOtp(req.body.mobile,token);
+        
+   }else{
+    console.log("new")
    const newNumber=new User({
       mobile:req.body.mobile,
       otp:token,
@@ -24,11 +33,14 @@ const Login=async (req,res)=>{
 
    });
    
-   const createUser=await newNumber.save();
-   
-   await SendOtp(req.body.mobile,token);
-      
-      res.json({ message: 'OTP sent successfully' });
+   if(await SendOtp(req.body.mobile,token)){
+     newNumber.save();
+    res.status(200).json({ message: 'OTP sent successfully' });
+   }else{
+    res.status(201).json({ message: 'OTP cannot send ' });
+   }
+  } 
+     
     } catch (error) {
       console.error('Failed to send OTP', error);
       res.status(500).json({ error: 'Failed to send OTP' });
@@ -52,20 +64,13 @@ const verfiyOtp=async(req,res)=>{
    }
  
    // Compare the provided OTP with the stored OTP
-   
- 
    if (otp ==user.otp) {
       User.findOneAndUpdate(
          {mobile:req.body.mobile},
           { otp: '', otpExpiresAt: '' },
           { new: true } // To return the updated document
         )
-          .then(updatedUser => {
-            console.log('Updated User:', updatedUser);
-          })
-          .catch(error => {
-            console.error('Failed to update user:', error);
-          });
+         
     }
       res.status(200).json({ message: ' OTP verified' });
    }
