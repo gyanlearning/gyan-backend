@@ -1,22 +1,30 @@
+const jwt=require("jsonwebtoken")
+function authenticate(req, res, next) {
+  // Get the JWT token from the cookie
+  const tokens = req.headers.cookie;
+  console.log(req.headers.cookie)
 
-const  verifyToken=(token) =>{
+  if (!tokens) {
+    return res.status(401).json({ error: 'Unauthorized' });
+  }
+
   try {
-    return jwt.verify(token,"Gauravkumar" );
+    // Verify the token
+    console.log("he")
+    const decoded = jwt.verify(tokens, process.env.JWT_SECRET_KEY,function(err){
+      if(err) {
+          console.log(typeof(err.message))
+          return err.message
+      }
+      } )
+   
+
+    // Attach the decoded token to the request object for further use
+    req.user = decoded;
+
+    next();
   } catch (err) {
-    return false;
+    return res.status(401).json({ error: 'Invalid token',err });
   }
 }
-// const verifyToken=(req,res,next)=>{
-//     const token=req.cookies.accessToken;
-//     console.log(req.cookie.accessToken)
-//     console.log("jdkdl")
-//     if(!token)  return  next(401,"You are not authenticated")
-//     jwt.verify(token,"Gauravkumar",async (err,payload)=>{
-//         if(err) return next(403,"Token in valid")
-//         req.userId=payload.id;
-        
-//         next();
-//       }) 
-// }
-
-module.exports=verifyToken
+module.exports=authenticate;

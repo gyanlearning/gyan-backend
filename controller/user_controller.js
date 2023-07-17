@@ -1,80 +1,29 @@
-const User=require("../model/User_model");
-const bcryptJs=require("bcrypt");
-const otplib=require("otplib")
-const secret = otplib.authenticator.generateSecret();
-const token = otplib.authenticator.generate(secret);
-const { SendOtp} = require("../utils/otp.util");
+const Profiles = require("../model/profile_model");
+const User =require("../model/User_model")
 
-const Login=async (req,res)=>{
-   try {
-   //const hashNumber=await bcryptJs.hash(req.body.mobile,10);
-   if(await User.findOne({mobile:req.body.mobile})){
-    const token = otplib.authenticator.generate(secret);
-    User.findOneAndUpdate(
-      {mobile:req.body.mobile},
-       { otp: token, otpExpiresAt: new Date(Date.now() + 10 * 60 * 1000) },
-       { new: true } // To return the updated document
-     )
-       .then(updatedUser => {
-        res.status(200).json({ message: 'OTP sent successfully' });
-       })
-       .catch(error => {
-        res.status(501).json({ message: 'OTP cannot send,internal server error ' });
-       });
-       await SendOtp(req.body.mobile,token);
-        
-   }else{
-    console.log("new")
-   const newNumber=new User({
-      mobile:req.body.mobile,
-      otp:token,
-      createdAt:Date.now(),
-      otpExpiresAt:new Date(Date.now() + 10 * 60 * 1000),
+const CreateProfile=async(req,res)=>{
+    if(req.body==null){
+        res.status(401).json({message})
+    }
+    
 
-   });
-   
-   if(await SendOtp(req.body.mobile,token)){
-     newNumber.save();
-    res.status(200).json({ message: 'OTP sent successfully' });
-   }else{
-    res.status(201).json({ message: 'OTP cannot send ' });
-   }
-  } 
-     
+    try {
+        const {firstName,lastName,address}=req.body;
+        const newProfile=new Profiles({
+            firstName:req.body.firstName,
+            lastName:req.body.lastName,
+            Address:req.body.Address
+        })
+        if(await newProfile.save()){
+            await User.up
+            res.status(200).json({message:"Profile is updated successfully"})
+            
+            return;
+        }
+        res.status(500).json({message:"Internal server error"})
     } catch (error) {
-      console.error('Failed to send OTP', error);
-      res.status(500).json({ error: 'Failed to send OTP' });
+       res.status(201) .json({error})
     }
-   
-  
 }
-const verfiyOtp=async(req,res)=>{
-   const { mobile, otp } = req.body;
 
-   // Find the user in the database
-   const user = await User.findOne({ mobile });
- 
-   if (!user) {
-     return res.status(401).json({ error: 'User not found' });
-   }
- 
-   // Check if OTP has expired
-   if (user.otpExpiresAt < new Date()) {
-     return res.status(401).json({ error: 'OTP expired' });
-   }
- 
-   // Compare the provided OTP with the stored OTP
-   if (otp ==user.otp) {
-      User.findOneAndUpdate(
-         {mobile:req.body.mobile},
-          { otp: '', otpExpiresAt: '' },
-          { new: true } // To return the updated document
-        )
-         
-    }
-      res.status(200).json({ message: ' OTP verified' });
-   }
- 
-   // OTP is valid, delete it from the user document
-
-module.exports={Login,verfiyOtp}
+module.exports=CreateProfile
