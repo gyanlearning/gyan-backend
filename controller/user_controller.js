@@ -1,80 +1,92 @@
-const User=require("../model/User_model");
-const bcryptJs=require("bcrypt");
-const otplib=require("otplib")
-const secret = otplib.authenticator.generateSecret();
-const token = otplib.authenticator.generate(secret);
-const { SendOtp} = require("../utils/otp.util");
+const Profiles = require("../model/Profile_model");
+const User = require("../model/User_model");
+const { SERVER_ERR } = require("../error");
+const bson = require("bson");
+const CreateProfile = async (req, res) => {
+  if (req.body == null) {
+    res.status(401).json({ message });
+  }
+  try {
+    const newProfile = new Profiles({
+      firstName: req.body.firstName,
+      lastName: req.body.lastName,
+      address: [
+        {
+          village: req.body.village,
+          district: req.body.district,
+          pincode: req.body.pincode,
+          state: req.body.state,
+          country: req.body.country,
+        },
+      ],
+    });
+    if (await newProfile.save()) {
+      await User.findOneAndUpdate;
+      res.status(200).json({ message: "Profile is updated successfully" });
 
-const Login=async (req,res)=>{
-   try {
-   //const hashNumber=await bcryptJs.hash(req.body.mobile,10);
-   if(await User.findOne({mobile:req.body.mobile})){
-    const token = otplib.authenticator.generate(secret);
-    User.findOneAndUpdate(
-      {mobile:req.body.mobile},
-       { otp: token, otpExpiresAt: new Date(Date.now() + 10 * 60 * 1000) },
-       { new: true } // To return the updated document
-     )
-       .then(updatedUser => {
-        res.status(200).json({ message: 'OTP sent successfully' });
-       })
-       .catch(error => {
-        res.status(501).json({ message: 'OTP cannot send,internal server error ' });
-       });
-       await SendOtp(req.body.mobile,token);
-        
-   }else{
-    console.log("new")
-   const newNumber=new User({
-      mobile:req.body.mobile,
-      otp:token,
-      createdAt:Date.now(),
-      otpExpiresAt:new Date(Date.now() + 10 * 60 * 1000),
-
-   });
-   
-   if(await SendOtp(req.body.mobile,token)){
-     newNumber.save();
-    res.status(200).json({ message: 'OTP sent successfully' });
-   }else{
-    res.status(201).json({ message: 'OTP cannot send ' });
-   }
-  } 
-     
-    } catch (error) {
-      console.error('Failed to send OTP', error);
-      res.status(500).json({ error: 'Failed to send OTP' });
+      return;
     }
-   
-  
-}
-const verfiyOtp=async(req,res)=>{
-   const { mobile, otp } = req.body;
+    res.status(500).json({ message: "Internal server error" });
+  } catch (error) {
+    res.status(201).json({ error });
+  }
+};
 
-   // Find the user in the database
-   const user = await User.findOne({ mobile });
- 
-   if (!user) {
-     return res.status(401).json({ error: 'User not found' });
-   }
- 
-   // Check if OTP has expired
-   if (user.otpExpiresAt < new Date()) {
-     return res.status(401).json({ error: 'OTP expired' });
-   }
- 
-   // Compare the provided OTP with the stored OTP
-   if (otp ==user.otp) {
-      User.findOneAndUpdate(
-         {mobile:req.body.mobile},
-          { otp: '', otpExpiresAt: '' },
-          { new: true } // To return the updated document
-        )
-         
-    }
-      res.status(200).json({ message: ' OTP verified' });
-   }
- 
-   // OTP is valid, delete it from the user document
+// Controller for Get All User
+const GetAllUser = async (req, res) => {
+  try {
+    const users = await User.find();
+    res.status(200).json({ users: users });
+  } catch (err) {
+    res.status(500).json({ message: SERVER_ERR });
+  }
+};
 
-module.exports={Login,verfiyOtp}
+//Get Single User
+const GetUserById = async (req, res) => {
+  try {
+    const users = await User.findOne({ _id: req.params.id });
+    res.status(200).json({ users: users });
+  } catch (err) {
+    res.status(500).json({ message: SERVER_ERR });
+  }
+};
+
+//Update profile
+const UpdateProfile = async (req, res) => {
+  try {
+    await Profiles.findOneAndUpdate(
+      { _id: req.params.id },
+      {
+        firstName: req.body.firstname,
+        lastName: req.body.lastname,
+        Address: req.body.address,
+      },
+      { new: true }
+    );
+    res.status(200).json({ message: "Profile updated" });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ message: SERVER_ERR });
+    return false;
+  }
+};
+
+//Get Single User
+const GetUserByName = async (req, res) => {
+  try {
+    console.log("sess");
+    const users = await Profiles.findOne({ firstName: req.body.firstName });
+    res.status(200).json({ users: users });
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ message: SERVER_ERR });
+  }
+};
+module.exports = {
+  CreateProfile,
+  GetAllUser,
+  GetUserById,
+  UpdateProfile,
+  GetUserByName,
+};

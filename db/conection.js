@@ -1,5 +1,5 @@
 const mongoose=require("mongoose");
-mongoose.connect(process.env.DB_PATH,{
+mongoose.connect("mongodb://localhost:27017/gyanDb",{
     useNewUrlParser:true,
     useUnifiedTopology:true,
     family:4,
