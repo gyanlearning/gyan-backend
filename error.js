@@ -9,6 +9,6 @@ exports.AUTH_TOKEN_MISSING_ERR = "auth token is missing";
 exports.JWT_DECODE_ERR = "incorrect token";
 
 exports.USER_NOT_FOUND_ERR = "User not found";
-
+exports.INTERNAL_SERVER_ERROR="Internal server error"
 
 exports.ACCESS_DENIED_ERR = "Access deny for normal user";

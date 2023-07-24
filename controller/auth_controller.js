@@ -13,7 +13,7 @@ const Login=async (req,res)=>{
    await User.findOneAndUpdate(
       {mobile:req.body.mobile},
        { otp: token, otpExpiresAt: new Date(Date.now() + 10 * 60 * 1000) },
-       { new: true } // To return the updated document
+       { new: true } 
      )
        .then(updatedUser => {
         res.status(200).json({ message: 'OTP sent successfully' });
@@ -78,7 +78,12 @@ const verfiyOtp=async(req,res)=>{
         res.cookie( tokens, { httpOnly: true }); 
       res.status(200).json({ message: ' OTP verified' });
    }
- 
-   // OTP is valid, delete it from the user document
-
-module.exports={Login,verfiyOtp}
+ //Logout
+const Logout=(req,res)=>{
+  res.clearCookie({
+    sameSite:"none",
+    secure:true,
+   })
+   .status(200).send("user has been logout")
+}
+module.exports={Login,verfiyOtp,Logout}
