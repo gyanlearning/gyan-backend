@@ -70,14 +70,13 @@ const verfiyOtp=async(req,res)=>{
           { otp: '', otpExpiresAt: '' },
           { new: true } // To return the updated document
         )
-        
-    }
-    const tokens = jwt.sign({ userId:user._id }, process.env.JWT_SECRET_KEY, { expiresIn: '10d' });
+          const tokens = jwt.sign({ userId:user._id }, process.env.JWT_SECRET_KEY, { expiresIn: '10d' });
 
         // Set the JWT token in a cookie
         res.cookie( tokens, { httpOnly: true }); 
       res.status(200).json({ message: ' OTP verified' });
    }
+
  //Logout
 const Logout=(req,res)=>{
   res.clearCookie({
@@ -87,3 +86,7 @@ const Logout=(req,res)=>{
    .status(200).send("user has been logout")
 }
 module.exports={Login,verfiyOtp,Logout}
+
+  
+ 
+
