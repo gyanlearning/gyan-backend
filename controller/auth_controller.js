@@ -74,18 +74,31 @@ const verfiyOtp=async(req,res)=>{
 
         // Set the JWT token in a cookie
         res.cookie( tokens, { httpOnly: true }); 
+
       res.status(201).json({ message: ' OTP verified' });   
     }else{
       res.status(203).json({ message: ' OTP does not match ' });   
     }
    
    }
+
+      
+   }
+
+
  //Logout
 const Logout=(req,res)=>{
   res.clearCookie({
     sameSite:"none",
     secure:true,
    })
+
    .status(201).send("user has been logout")
 }
+
 module.exports={Login,verfiyOtp,Logout}
+
+  
+ 
+
+
