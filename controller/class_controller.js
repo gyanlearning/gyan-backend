@@ -86,7 +86,7 @@ const UpdateSpecificData = async (req, res) => {
         updatedData: updated,
       });
     }
-    res.status(500).json({ message: INTERNAL_SERVER_ERROR});
+
   } catch (error) {
     console.log(error);
     return res
