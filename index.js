@@ -18,6 +18,7 @@ const ClassRoute=require("./routes/class_route");
 const BoardRoute=require("./routes/board.route");
 const SubjectRoute=require("./routes/subject_route")
 
+const TopicRoute=require("./routes/topic_rotue")
 
 const app=express();
 
@@ -32,6 +33,8 @@ app.use("/api",ClassRoute);
 
 app.use("/api",BoardRoute)
 app.use("/api",SubjectRoute);
+app.use("/api",TopicRoute);
+
 
 
 
