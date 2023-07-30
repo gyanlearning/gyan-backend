@@ -1,5 +1,9 @@
 const mongoose=require("mongoose");
-mongoose.connect("mongodb+srv://Gaurav:gaurav9128@cluster0.zfgqj.mongodb.net/?retryWrites=true&w=majority",{
+
+mongoose.connect("mongodb://localhost:27017/gyanDb",{
+
+//mongoose.connect("mongodb+srv://Gaurav:gaurav9128@cluster0.zfgqj.mongodb.net/?retryWrites=true&w=majority",{
+
     useNewUrlParser:true,
     useUnifiedTopology:true,
     family:4,

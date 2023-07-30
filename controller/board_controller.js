@@ -1,28 +1,25 @@
-const Class = require("../model/class_model");
+const Board = require("../model/Board_model");
 const { INTERNAL_SERVER_ERROR, EMPTY_BODY } = require("../error");
 const { ObjectId } = require("bson");
 
-const AddNewClass = async (req, res) => {
+const AddNewBoard = async (req, res) => {
   try {
     if (!req.body) {
       return res.status(203).json({ message: EMPTY_BODY });
     } else {
-      const { className, boardId, startTime, endTime } = req.body;
-      if (await Class.findOne({ className: req.body.className })) {
+      if (await Board.findOne({ boardName: req.body.boardName })) {
         res.status(200).json({ message: "Class is already exists" });
       } else {
-        const newClass = new Class({
-          className: className,
-          boardId: new ObjectId(boardId),
-          startTime: startTime,
-          endTime: endTime,
+        const newBoard = new Board({
+          boardName: req.body.boardName,
+
           createdAt: Date.now(),
         });
-        const isSave = await newClass.save();
+        const isSave = await newBoard.save();
         if (isSave) {
           res
             .status(200)
-            .json({ message: "New class is added successfully", json: isSave });
+            .json({ message: "New Board is added successfully", json: isSave });
         } else {
           res
             .status(500)
@@ -38,12 +35,17 @@ const AddNewClass = async (req, res) => {
   }
 };
 
-const GetClassData = async (req, res) => {
+const GetBoardData = async (req, res) => {
   try {
-    const classData = await Class.find();
+    const boardData = await Board.find();
+    if (boardData !== null) {
+      return res
+        .status(200)
+        .json({ message: "Empty Document", data: boardData });
+    }
     return res
       .status(200)
-      .json({ message: "Successfully get data", data: classData });
+      .json({ message: "Successfully get board data", data: boardData });
   } catch (error) {
     return res
       .status(500)
@@ -51,17 +53,17 @@ const GetClassData = async (req, res) => {
   }
 };
 
-const GetClassByName = async (req, res) => {
+const GetBoardByName = async (req, res) => {
   try {
-    const classData = await Class.findOne({ className: req.body.className });
-    if (classData !== null) {
+    const boardData = await Board.findOne({ boardName: req.body.boardName });
+    if (boardData !== null) {
       return res
         .status(200)
-        .json({ message: "Data is found", data: classData });
+        .json({ message: "Data is found", data: boardData });
     }
     return res
       .status(200)
-      .json({ message: "Data is not  found", data: classData });
+      .json({ message: "Data is not  found", data: boardData });
   } catch (error) {
     console.log(error);
     return res
@@ -69,24 +71,24 @@ const GetClassByName = async (req, res) => {
       .json({ message: INTERNAL_SERVER_ERROR, error: error });
   }
 };
-const UpdateSpecificData = async (req, res) => {
+const UpdateSpecificBoardData = async (req, res) => {
   try {
     if (!req.body) {
       return res.status(203).json({ message: EMPTY_BODY });
     }
-    const updated = await Class.findOneAndUpdate(
-      { className: req.params.className },
+    const isUpdated = await Board.findOneAndUpdate(
+      { boardName: req.params.boardName },
       req.body,
       { new: true }
     );
 
-    if (updated) {
+    if (isUpdated) {
       res.status(200).json({
-        message: "Class is successfully updated",
-        updatedData: updated,
+        message: "Board document is successfully updated",
+        updatedData: isUpdated,
       });
     }
-
+    res.status(500).json({ message: INTERNAL_SERVER_ERROR });
   } catch (error) {
     console.log(error);
     return res
@@ -95,19 +97,19 @@ const UpdateSpecificData = async (req, res) => {
   }
 };
 
-const UpdateAllClassData = async (req, res) => {
+const UpdateAllBoardData = async (req, res) => {
   try {
     if (!req.body) {
       return res.status(203).json({ message: EMPTY_BODY });
     } else {
-      const updatedData = await Class.updateMany(
-        { className: req.params.className },
+      const updatedData = await Board.updateMany(
+        { boardName: req.params.boardName },
         req.body,
         { new: true }
       );
       if (updatedData) {
         res.status(200).json({
-          message: "Class is successfully updated",
+          message: "Board document is successfully updated",
           updatedData: updatedData,
         });
       } else {
@@ -121,13 +123,13 @@ const UpdateAllClassData = async (req, res) => {
       .json({ message: INTERNAL_SERVER_ERROR, error: error });
   }
 };
-const DeleteOneClass = async (req, res) => {
+const DeleteOneBoardData = async (req, res) => {
   try {
     if (!req.body) {
       return res.status(203).json({ message: EMPTY_BODY });
     } else {
-      const isDelete = await Class.findOneAndDelete({
-        className: req.params.className,
+      const isDelete = await Board.findOneAndDelete({
+        boardName: req.params.boardName,
       });
       if (isDelete) {
         res.status(200).json({ message: "Successfully delete document " });
@@ -143,10 +145,10 @@ const DeleteOneClass = async (req, res) => {
   }
 };
 module.exports = {
-  AddNewClass,
-  GetClassData,
-  GetClassByName,
-  UpdateSpecificData,
-  UpdateAllClassData,
-  DeleteOneClass,
+  AddNewBoard,
+  GetBoardByName,
+  GetBoardData,
+  UpdateAllBoardData,
+  UpdateSpecificBoardData,
+  DeleteOneBoardData,
 };

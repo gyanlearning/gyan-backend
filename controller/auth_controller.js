@@ -16,7 +16,7 @@ const Login=async (req,res)=>{
        { new: true } 
      )
        .then(updatedUser => {
-        res.status(200).json({ message: 'OTP sent successfully' });
+        res.status(201).json({ message: 'OTP sent successfully' });
        })
        .catch(error => {
         res.status(501).json({ message: 'OTP cannot send,internal server error ' });
@@ -37,7 +37,7 @@ const Login=async (req,res)=>{
      newNumber.save();
     res.status(200).json({ message: 'OTP sent successfully' });
    }else{
-    res.status(201).json({ message: 'OTP cannot send ' });
+    res.status(203).json({ message: 'OTP cannot send ' });
    }
   } 
      
@@ -70,12 +70,21 @@ const verfiyOtp=async(req,res)=>{
           { otp: '', otpExpiresAt: '' },
           { new: true } // To return the updated document
         )
-          const tokens = jwt.sign({ userId:user._id }, process.env.JWT_SECRET_KEY, { expiresIn: '10d' });
+        const tokens = jwt.sign({ userId:user._id }, process.env.JWT_SECRET_KEY, { expiresIn: '10d' });
 
         // Set the JWT token in a cookie
         res.cookie( tokens, { httpOnly: true }); 
-      res.status(200).json({ message: ' OTP verified' });
+
+      res.status(201).json({ message: ' OTP verified' });   
+    }else{
+      res.status(203).json({ message: ' OTP does not match ' });   
+    }
+   
    }
+
+      
+   }
+
 
  //Logout
 const Logout=(req,res)=>{
@@ -83,10 +92,13 @@ const Logout=(req,res)=>{
     sameSite:"none",
     secure:true,
    })
-   .status(200).send("user has been logout")
+
+   .status(201).send("user has been logout")
 }
+
 module.exports={Login,verfiyOtp,Logout}
 
   
  
+
 
