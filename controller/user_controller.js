@@ -1,16 +1,19 @@
-
 const Profiles = require("../model/profile_model");
 const User = require("../model/User_model");
 const { SERVER_ERR } = require("../error");
 const bson = require("bson");
+const  jwt  = require("jsonwebtoken");
 const CreateProfile = async (req, res) => {
   if (req.body == null) {
     res.status(401).json({ message });
   }
   try {
+    const userId=req.user;
     const newProfile = new Profiles({
+
       firstName: req.body.firstName,
       lastName: req.body.lastName,
+      userId:userId.user._id,
       address: [
         {
           village: req.body.village,
@@ -44,11 +47,19 @@ const GetAllUser = async (req, res) => {
 };
 
 //Get Single User
-const GetUserById = async (req, res) => {
+const GetUser = async (req, res) => {
   try {
-    const users = await User.findOne({ _id: req.params.id });
-    res.status(200).json({ users: users });
+   
+    if(req.user!=="undefined" && req.user!==""){
+      const user=req.user;
+      const currentUser=await Profiles.findOne({userId:user.user._id});
+      
+      res.status(200).json({ user:currentUser });
+    }
+    
+    
   } catch (err) {
+    console.log(err)
     res.status(500).json({ message: SERVER_ERR });
   }
 };
@@ -87,9 +98,7 @@ const GetUserByName = async (req, res) => {
 module.exports = {
   CreateProfile,
   GetAllUser,
-  GetUserById, 
+  GetUser,
   UpdateProfile,
   GetUserByName,
 };
-
-

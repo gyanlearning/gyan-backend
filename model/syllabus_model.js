@@ -9,35 +9,14 @@ const syllabusSchema = new mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       required: true,
     },  
-    chapter: [
-      {
-        chapterNO: {
-          type: Number,
-        },
-        chapterName: {
-          type: String,
-        },
-        duration: {
-          type: Number,
-        },
-        topic: [
-          {
-            topicName: {
-              type: String,
-            },
-            content: {
-              type: String,
-            },
-          },
-        ],
-      },
-    ],
+  
    
     details: {
       type: String,
     },
 
-    createdAt: { type: Date },
+    createdBy:{type:Object},
+    updatedBy:{type:Object}
   },
   { timestamps: true }
 );

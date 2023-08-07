@@ -1,9 +1,4 @@
-
-
 const mongoose = require("mongoose");
-
-
-
 const profileSchema = mongoose.Schema(
   {
     firstName: { type: String, required: true },
@@ -26,8 +21,10 @@ const profileSchema = mongoose.Schema(
         //country: {"India"},
       },
     ],
-    profileAvatar: { type: String },
-    createdAt: Date,
+    avtar: { type: String },
+    userId: { type: mongoose.Schema.Types.ObjectId },
+    createdBy: { type: Object },
+    updatedBy: { type: Object },
   },
 
   { timestamps: true }

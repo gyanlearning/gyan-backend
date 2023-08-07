@@ -1,5 +1,3 @@
-
-
 const { Timestamp } = require("bson");
 
 const mongoose = require("mongoose");
@@ -11,21 +9,18 @@ const classSchema = new mongoose.Schema(
     },
     boardId: {
       type: mongoose.Schema.Types.ObjectId,
+    },
 
+    startTime: {
+      type: String,
     },
-    
-    startTime:{
-      type:String,
+    endTime: {
+      type: String,
     },
-    endTime:{
-      type:String,
-
-    },
-    createdAt: { type: Date },
+    createdBy:{type:Object},
+    updatedBy:{type:Object}
   },
   { timestamps: true }
 );
 
-
-module.exports =mongoose.model("Class", classSchema);
-
+module.exports = mongoose.model("Class", classSchema);
