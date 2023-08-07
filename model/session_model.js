@@ -9,8 +9,9 @@ const sessionSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    createdAt: { type: Date },
+    createdBy:{type:Object},
+    updatedBy:{type:Object}
   },
   { timestamps: true }
 );
-module.exports =mongoose.model ("Sessions", sessionSchema);
+module.exports = mongoose.model("Sessions", sessionSchema);

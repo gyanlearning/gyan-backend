@@ -10,11 +10,9 @@ const cors=require("cors");
 const router=express.Router();
 const cookieParser=require("cookie-parser");
 
-
-
 const UserRoute=require("./routes/user_route");
 const SessionRoute=require("./routes/session_route");
-const ClassRoute=require("./routes/class_route");
+//const ClassRoute=require("./routes/class_route");
 const BoardRoute=require("./routes/board.route");
 const SubjectRoute=require("./routes/subject_route")
 
@@ -29,7 +27,7 @@ app.use(cookieParser())
 
 app.use("/api",UserRoute)
 app.use("/api",SessionRoute)
-app.use("/api",ClassRoute);
+//app.use("/api",ClassRoute);
 
 app.use("/api",BoardRoute)
 app.use("/api",SubjectRoute);
