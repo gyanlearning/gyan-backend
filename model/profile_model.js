@@ -3,6 +3,7 @@ const profileSchema = mongoose.Schema(
   {
     firstName: { type: String, required: true },
     lastName: { type: String, required: true },
+    userId:{type:mongoose.Schema.Types.ObjectId},
     address: [
       {
         village: {
@@ -11,7 +12,6 @@ const profileSchema = mongoose.Schema(
         district: {
           type: String,
         },
-
         pincode: {
           type: Number,
         },
@@ -21,6 +21,7 @@ const profileSchema = mongoose.Schema(
         //country: {"India"},
       },
     ],
+    email:{type:String},
     avtar: { type: String },
     userId: { type: mongoose.Schema.Types.ObjectId },
     createdBy: { type: Object },
