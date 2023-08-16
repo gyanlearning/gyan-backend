@@ -17,7 +17,7 @@ const BoardRoute=require("./routes/board.route");
 const SubjectRoute=require("./routes/subject_route")
 
 const TopicRoute=require("./routes/topic_rotue")
-
+const Quiz=require("./routes/Quiz_route/question_route")
 const app=express();
 
 app.use(express.json())
@@ -32,7 +32,7 @@ app.use("/api",SessionRoute)
 app.use("/api",BoardRoute)
 app.use("/api",SubjectRoute);
 app.use("/api",TopicRoute);
-
+app.use("/api",Quiz)
 
 
 
