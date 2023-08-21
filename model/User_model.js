@@ -9,8 +9,8 @@ const userSchema = mongoose.Schema(
     token:{type:ObjectId},
     createdAt:{type:Date},
     updatedAt:{type:Date},
-    createdBy:{type:Object},
-    updatedBy:{type:Object}
+    createdBy:{type:Object,ref:"User"},
+    updatedBy:{type:Object,ref:"User"}
   },
 
   { timestamps: true }

@@ -13,7 +13,7 @@ const {authenticate} = require("../middleware/jwt");
 router.post("/login", Login);
 router.post("/signup",Signup);
 router.post("/logout", authenticate, Logout);
-router.get("/user", authenticate, GetUser);
+router.get("/user/:id", GetUser);
 router.get("/users", GetAllUser);
 router.get("/user/name/", GetUserByName);
 //router.post("/otp", verfiyOtp);

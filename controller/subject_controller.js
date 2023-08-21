@@ -13,8 +13,7 @@ const CreateSubject = async (req, res) => {
       const newSubject = new Subject({
         name,
         description,
-        created_at: Date.now(),
-        updated_at: Date.now(),
+      
       });
       const isSaved = await newSubject.save();
       if (isSaved) {

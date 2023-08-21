@@ -1,6 +1,7 @@
 const Board = require("../model/Board_model");
 const { INTERNAL_SERVER_ERROR, EMPTY_BODY } = require("../error");
 const { ObjectId } = require("bson");
+const createError = require("../error");
 
 const AddNewBoard = async (req, res) => {
   try {
@@ -8,12 +9,11 @@ const AddNewBoard = async (req, res) => {
       return res.status(203).json({ message: EMPTY_BODY });
     } else {
       if (await Board.findOne({ boardName: req.body.boardName })) {
-        res.status(200).json({ message: "Class is already exists" });
+        res.json( createError(404,"Board already exists"));
       } else {
         const newBoard = new Board({
           boardName: req.body.boardName,
-
-          createdAt: Date.now(),
+          state:req.body.state
         });
         const isSave = await newBoard.save();
         if (isSave) {

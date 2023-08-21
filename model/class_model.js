@@ -7,9 +7,9 @@ const classSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    boardId: {
-      type: mongoose.Schema.Types.ObjectId,
-    },
+    // boardId: {
+    //   type: mongoose.Schema.Types.ObjectId,
+    // },
 
     startTime: {
       type: String,
@@ -18,7 +18,9 @@ const classSchema = new mongoose.Schema(
       type: String,
     },
     createdBy:{type:Object},
-    updatedBy:{type:Object}
+    updatedBy:{type:Object},
+    createdAt:{type:Date},
+    updatedAt:{type:Date},
   },
   { timestamps: true }
 );

@@ -6,8 +6,10 @@ const subjectSchema = new mongoose.Schema({
   }, // Name of the subject (e.g., Mathematics, Science, History, etc.)
   description: { type: String }, // A brief description of the subject
   //   teacher: String, // Name of the subject teacher
-  created_at: Date,
-  updated_at: Date,
+  createdBy: { type: Object },
+  updatedBy: { type: Object },
+  createdAt: { type: Date },
+  updatedAt: { type: Date },
 });
 
 module.exports = new mongoose.model("Subject", subjectSchema);

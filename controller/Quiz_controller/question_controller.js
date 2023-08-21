@@ -118,6 +118,7 @@ const updateQuestion = async (req, res) => {
 //this is method for insert quesiton from the excel file
 const bulkInsertion = async (req, res) => {
   var filePath = path.resolve(__dirname, "myfile.xlsx");
+  console.log(req.file.path)
   //const file = fs.readFileSync(filePath);
   const workbook = xlsx.readFile(filePath);
   const sheetName = workbook.SheetNames[0];

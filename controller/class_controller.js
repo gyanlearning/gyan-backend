@@ -1,22 +1,17 @@
 const Class = require("../model/class_model");
 const { INTERNAL_SERVER_ERROR, EMPTY_BODY } = require("../error");
 const { ObjectId } = require("bson");
-
 const AddNewClass = async (req, res) => {
   try {
     if (!req.body) {
       return res.status(203).json({ message: EMPTY_BODY });
     } else {
-      const { className, boardId, startTime, endTime } = req.body;
+      const { className} = req.body;
       if (await Class.findOne({ className: req.body.className })) {
         res.status(200).json({ message: "Class is already exists" });
       } else {
         const newClass = new Class({
-          className: className,
-          boardId: new ObjectId(boardId),
-          startTime: startTime,
-          endTime: endTime,
-          createdAt: Date.now(),
+           className,
         });
         const isSave = await newClass.save();
         if (isSave) {
