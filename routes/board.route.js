@@ -13,5 +13,5 @@ router.get("/boards", GetBoardData);
 router.get("/board/boardName", GetBoardByName);
 router.patch("/board/:boardName", UpdateSpecificBoardData);
 router.put("/board/:boardName", UpdateAllBoardData);
-router.delete("/delete/:boardName", DeleteOneBoardData);
+router.delete("/baord/delete/:boardName", DeleteOneBoardData);
 module.exports = router;

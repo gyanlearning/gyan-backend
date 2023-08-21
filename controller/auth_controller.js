@@ -1,5 +1,5 @@
 const User = require("../model/User_model");
-const Profile=require("../model/profile_model");
+const Profile = require("../model/profile_model");
 const bcryptJs = require("bcrypt");
 //const otplib = require("otplib");
 // const secret = otplib.authenticator.generateSecret();
@@ -97,14 +97,21 @@ const Login = async (req, res) => {
       if (user) {
         const isMatch = await bcryptJs.compare(password, user.password);
         if (isMatch) {
+          const tokens = jwt.sign(
+            { user: user._id },
+            process.env.JWT_SECRET_KEY,
+            {
+              expiresIn: "10d",
+            }
+          );
           return res
             .status(200)
-            .json({ message: "Login successfully", user: user });
+            .json({ message: "Login successfully", user: user,tokens:tokens });
         } else {
-          return res.status(400).json({ message: "Password not found" });
+          return res.status(401).json({ message: "Password not matched" });
         }
       } else {
-        return res.status(400).json({ message: "User not found " });
+        return res.status(404).json({ message: "User not found " });
       }
     }
   } catch (error) {
@@ -114,9 +121,8 @@ const Login = async (req, res) => {
 };
 
 const Signup = async (req, res) => {
-  
   if (req.body === "undefined") {
-    return res.status(204).json({ message: "Body is empty!" });
+    return res.status(304).json({ message: "Body is empty!" });
   }
   try {
     const {
@@ -124,46 +130,47 @@ const Signup = async (req, res) => {
       password,
       firstName,
       lastName,
-      village,
-      district,
       email,
-      pincode,
-      state,
+ 
     } = req.body;
     if (mobile && password === "") {
-      return res.status(204).json({ message: "Email or password empty" });
+      return res.status(304).json({ message: "Email or password empty" });
     } else {
-      const isUser=await User.findOne({mobile});
-      if(isUser){
-        return res.status(200).json({message:"User already exists"});
-      }else{
-        const hashPassword=await bcryptJs.hash(password,10);
-      
-        const newUser=await User({mobile,password:hashPassword});
-        if(newUser){
-          const isSaved=await newUser.save();
-          if(isSaved){
-            const newProfile = new Profile({
+      const isUser = await User.findOne({ mobile });
+      if (isUser) {
+        return res.status(409).json({ message: "User already exists. Please SignIn" });
+      } else {
+        const hashPassword = await bcryptJs.hash(password, 10);
 
+        const newUser = await User({ mobile, password: hashPassword });
+        if (newUser) {
+          const isSaved = await newUser.save();
+          if (isSaved) {
+            const newProfile = new Profile({
               firstName,
               lastName,
-              userId:isSaved._id,         
-              email,
-              address: [
-                {
-                  village,
-                  district,
-                  pincode,
-                  state,
-                  
-                },
-              ],
+              userId: isSaved._id,
+              email:email,
             });
-            if(await newProfile.save()){
-              return res.status(200).json({message:"Successfully created new account", user:newProfile})
-            }else{
-
-              return res.status(400).json({message:"Error while processing data"})
+            if (await newProfile.save()) {
+              const tokens = jwt.sign(
+                { user: isSaved._id },
+                process.env.JWT_SECRET_KEY,
+                {
+                  expiresIn: "10d",
+                }
+              );
+             // await User.findOneAndUpdate({_id:isSaved._id},{token:tokens},{new :true});
+              return res
+                .status(200)
+                .json({
+                  message: "Successfully created new account",
+                  user: newProfile,token:tokens
+                });
+            } else {
+              return res
+                .status(400)
+                .json({ message: "Error while processing data" });
             }
           }
         }
