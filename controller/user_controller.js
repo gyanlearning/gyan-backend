@@ -4,6 +4,7 @@ const { SERVER_ERR } = require("../error");
 const bson = require("bson");
 const jwt = require("jsonwebtoken");
 const createError = require("../error");
+const classBoardUserMap = require("../model/classBoardUserMap");
 const CreateProfile = async (req, res) => {
   if (req.body == null) {
     res.status(401).json({ message });
@@ -50,7 +51,8 @@ const GetUser = async (req, res) => {
   try {
     if (req.user !== "undefined" && req.user !== "") {
       const userId = req.params.id;
-      const currentUser = await Profile.findOne({ userId });
+      const currentUser = await User.findOne({ userId });
+      
       if (currentUser) {
         return res.status(200).json({ user: currentUser });
       } else {

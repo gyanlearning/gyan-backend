@@ -11,9 +11,9 @@ exports.JWT_DECODE_ERR = "incorrect token";
 exports.USER_NOT_FOUND_ERR = "User not found";
 exports.INTERNAL_SERVER_ERROR="Internal server error"
 
- const createError=(status,message)=>{
+ const createError=(statusCode,message)=>{
     const err=new Error();
-    err.status=status;
+    err.statusCode=statusCode;
     err.message=message;
     return err;
 }

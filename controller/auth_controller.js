@@ -7,6 +7,7 @@ const bcryptJs = require("bcrypt");
 // const { SendOtp } = require("../utils/otp.util");
 const jwt = require("jsonwebtoken");
 const { INTERNAL_SERVER_ERROR } = require("../error");
+
 // const Login = async (req, res) => {
 //   try {
 //     //const hashNumber=await bcryptJs.hash(req.body.mobile,10);
@@ -160,6 +161,7 @@ const Signup = async (req, res) => {
                   expiresIn: "10d",
                 }
               );
+              res.set("token",tokens)
              // await User.findOneAndUpdate({_id:isSaved._id},{token:tokens},{new :true});
               return res
                 .status(200)
