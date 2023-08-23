@@ -5,8 +5,8 @@ const userEductionMappingSchema=new mongoose.Schema({
     profileId:{type:mongoose.Schema.Types.ObjectId,ref:"Profile"},
     boardId:{type:mongoose.Schema.Types.ObjectId,ref:"Board"},
     subjectId:{type:mongoose.Schema.Types.ObjectId,ref:"Subject"},
-    createdBy: { type: Object },
-    updatedBy: { type: Object },
+    createdBy: { type: Object ,ref:"User"},
+    updatedBy: { type: Object,ref:"User" },
     createdAt: { type: Date },
     updatedAt: { type: Date },
 },{timestamps:true});

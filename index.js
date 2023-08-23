@@ -1,6 +1,7 @@
 
 const express=require("express");
 const dotenv=require("dotenv");
+const fileupload=require("express-fileupload");
 const bodyParser =require("body-parser");
 const port=process.env.port || 3000;
 dotenv.config();
@@ -19,14 +20,17 @@ const TopicRoute=require("./routes/topic_rotue");
 const Quiz=require("./routes/Quiz_route/question_route");
 const InsertUserEducation=require("./routes/User_class_map_route");
 const ClassBoardMapRoute=require("./routes/class_board_map_route");
-
+const ChapterRoute=require("./routes/chapter_route");
 const app=express();
-
+app.use(fileupload());
 app.use(express.json());
 app.use(bodyParser.urlencoded({extended:true}));
+app.use(bodyParser.json({
+    type: ["application/x-www-form-urlencoded", "application/json"], // Support json encoded bodies
+  }));
 app.use(cors({origin:"http://localhost:3001",credentials:true }));
 app.use(cookieParser())
-
+app.use(express.static(__dirname + '/public'));
 app.use("/api",UserRoute);
 app.use("/api",SessionRoute);
 app.use("/api",ClassRoute);
@@ -37,7 +41,7 @@ app.use("/api",TopicRoute);
 app.use("/api",Quiz);
 app.use("/api",InsertUserEducation);
 app.use("/api",ClassBoardMapRoute);
-
+app.use("/api",ChapterRoute)
 
 app.listen(port,()=>{
 console.log(`Server is running on : localhost://${port}`)

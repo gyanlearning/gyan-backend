@@ -4,7 +4,13 @@ var Excel = require("exceljs");
 const fs = require("fs");
 var wb = new Excel.Workbook();
 var path = require("path");
-
+const ClassModel=require("../../model/class_model");
+const classBoardMap=require("../../model/classBoardMap");
+const SubjectModel=require("../../model/subject_model");
+const classBoardSubjectChpaterMap=require("../../model/chapter_ClassBoardSubjectMap");
+const CreateError=require("../../error");
+const classBoardSubjectMap = require("../../model/classBoardSubjectMap");
+const chapter_model = require("../../model/chapter_model");
 //method for create new Question document
 const newQuestionDoc = async (
   title,
@@ -14,30 +20,88 @@ const newQuestionDoc = async (
   option4,
   Class,
   subject,
-  chapter
+  chapter,
+  correctOptions,res
 ) => {
-  const excelData = new Question({
-    title: title,
-    option: [
-      {
-        option1: option1,
-        option2: option2,
-        option3: option3,
-        option4: option4,
-      },
-    ],
-    class: Class,
-    subject: subject,
-    chapter: chapter,
-  });
-
-  const isSaved = await excelData.save();
-  if (isSaved) {
-    return res.status(200).json({
-      message: "Data saved to database successfully.",
-      data: isSaved,
-    });
+  let classId=await ClassModel.findOne({className:Class});
+  
+  let classBoardMapId=await classBoardMap.findOne({classId:classId._id.toString()});
+  
+  let subjectId=await SubjectModel.findOne({name:subject});
+  
+  let chapterId=await chapter_model.findOne({name:chapter});
+  
+  let classBoardSubjectMapId=await classBoardSubjectMap.findOne({classBoardMapId:classBoardMapId._id.toString(),subjectId:subjectId._id.toString()});
+  if(classBoardSubjectMapId){
+    if(chapterId){
+      let newClassboardChpterMap=new classBoardSubjectChpaterMap({
+        classBoardSubjectMapId,
+        chapterId:chapterId._id.toString()
+      });
+      await newClassboardChpterMap.save();
+    }
+     
+  }else{
+    const newClassBoardSubjectMap=new classBoardSubjectMap({
+      classBoardMapId:classBoardMapId._id.toString(),
+      subjectId:subjectId._id.toString(),
+    })
+    await newClassBoardSubjectMap.save();
   }
+  let classBoardSubjectChpaterId=await classBoardSubjectChpaterMap.findOne({chapterId:chapterId._id.toString(),classBoardSubjectMapId:classBoardSubjectMapId._id.toString()})
+  
+  if(classBoardSubjectChpaterId){
+    const excelData = new Question({
+      title: title,
+      option: [
+        {
+          option1: option1,
+          option2: option2,
+          option3: option3,
+          option4: option4,
+        },
+      ],
+      classBoardSubjectChpaterId:classBoardSubjectChpaterId._id.toString(),
+      answer:correctOptions
+    });
+  
+    await excelData.save();
+    return ;
+  }else{
+    if(classBoardSubjectMapId){
+    
+        if(chapterId){
+          let newClassboardChpterMap=new classBoardSubjectChpaterMap({
+            classBoardSubjectMapId,
+            chapterId
+          });
+        const saved=  await newClassboardChpterMap.save();
+          const excelData = new Question({
+            title: title,
+            option: [
+              {
+                option1: option1,
+                option2: option2,
+                option3: option3,
+                option4: option4,
+              },
+            ],
+            classBoardSubjectChpaterId:saved._id.toString(),
+            answer:correctOptions
+          });     
+          const isSaved = await excelData.save();
+        }
+      return;
+    
+    }else{
+      const newClassBoardSubjectMap=new classBoardSubjectMap({
+        classBoardMapId:classBoardMapId._id.toString(),
+        subjectId:subjectId._id.toString()
+      })
+      await newClassBoardSubjectMap.save();
+      return;
+    }
+  } 
 };
 
 //method for insert new single docuemnt
@@ -57,16 +121,17 @@ const insertQuestion = async (req, res) => {
       Class,
       subject,
       chapter,
+      correctOptions
     } = req.body;
+    
     newQuestionDoc(
       title,
       option1,
       option2,
       option3,
       option4,
-      Class,
-      subject,
-      chapter
+      classBoardSubjectChpaterId,
+      correctOptions,
     );
   } catch (error) {
     //console.log(error);
@@ -117,11 +182,14 @@ const updateQuestion = async (req, res) => {
 
 //this is method for insert quesiton from the excel file
 const bulkInsertion = async (req, res) => {
-  var filePath = path.resolve(__dirname, "myfile.xlsx");
-  console.log(req.file.path)
-  //const file = fs.readFileSync(filePath);
-  const workbook = xlsx.readFile(filePath);
+
+ 
+ const fileBuffer = req.files.excelFile.data;
+ 
+
+ const workbook = xlsx.read(fileBuffer, { type: 'buffer' });
   const sheetName = workbook.SheetNames[0];
+  
   const sheetData = xlsx.utils.sheet_to_json(workbook.Sheets[sheetName]);
   try {
     let found = 1;
@@ -129,9 +197,7 @@ const bulkInsertion = async (req, res) => {
       try {
         if (await Question.findOne({ title: row.title })) {
           found = 0;
-          return res
-            .status(203)
-            .json({ message: "This question is already exist" });
+          return res.json(CreateError(204,"Already upload"));
         }
       } catch (error) {
         //console.log(error);
@@ -148,7 +214,8 @@ const bulkInsertion = async (req, res) => {
           row.option4,
           row.class,
           row.subject,
-          row.chapter
+          row.chapter,
+          row.correctOptions,
         );
       }
     }
@@ -157,6 +224,8 @@ const bulkInsertion = async (req, res) => {
       .status(500)
       .json({ error: "An error occurred while processing the file." });
   }
+  
+  res.status(200).json({message:"Question is successfully upload"})
 };
 
 //this is method delete question from the database

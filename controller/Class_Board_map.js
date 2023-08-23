@@ -3,6 +3,8 @@ const CreateError = require("../error");
 const Class = require("../model/class_model");
 const Board = require("../model/Board_model");
 
+
+
 const InsertNewClassBoardMap = async (req, res) => {
   if (req.body === "undefined") {
     return res.status(304).json({ message: "Body is empty!" });
