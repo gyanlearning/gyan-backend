@@ -21,6 +21,8 @@ const Quiz=require("./routes/Quiz_route/question_route");
 const InsertUserEducation=require("./routes/User_class_map_route");
 const ClassBoardMapRoute=require("./routes/class_board_map_route");
 const ChapterRoute=require("./routes/chapter_route");
+
+const QuizRoute=require("./routes/Quiz_route/quiz_route")
 const app=express();
 app.use(fileupload());
 app.use(express.json());
@@ -42,7 +44,7 @@ app.use("/api",Quiz);
 app.use("/api",InsertUserEducation);
 app.use("/api",ClassBoardMapRoute);
 app.use("/api",ChapterRoute)
-
+app.use("/api",QuizRoute)
 app.listen(port,()=>{
 console.log(`Server is running on : localhost://${port}`)
 });

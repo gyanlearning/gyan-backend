@@ -1,8 +1,8 @@
-const ExcelReader = require("../../controller/Quiz_controller/question_controller");
-
-
-
 const router=require("express").Router();
-router.post("/bulk-insertion",ExcelReader)
+const {bulkInsertion,getAllQuizQuestion} = require("../../controller/Quiz_controller/question_controller");
+
+
+router.post("/bulk-insertion",bulkInsertion)
+router.get("/getQuestions",getAllQuizQuestion)
 
 module.exports=router;

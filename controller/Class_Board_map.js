@@ -31,8 +31,9 @@ const InsertNewClassBoardMap = async (req, res) => {
           classId: classId._id.toString(),
           boardId: boardId._id.toString(),
         });
-        if (await newClassBoardMap.save()) {
-          res.status(200).json({message:"Successfully mapped", data: newClassBoardMap });
+        const isSaved=await newClassBoardMap.save();
+        if (isSaved) {
+          res.status(200).json({message:"Successfully mapped", data: isSaved });
         } else {
           res.json(CreateError(102, "Error while processing"));
         }
