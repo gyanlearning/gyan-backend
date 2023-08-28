@@ -1,5 +1,7 @@
 const User = require("../model/User_model");
 const Profile = require("../model/profile_model");
+const ClassBoardUser = require("../model/classBoardUserMap");
+const ClassBoardMap=require("../model/classBoardMap")
 const bcryptJs = require("bcrypt");
 //const otplib = require("otplib");
 // const secret = otplib.authenticator.generateSecret();
@@ -105,9 +107,18 @@ const Login = async (req, res) => {
               expiresIn: "10d",
             }
           );
+          
+          const classBoardUser = await ClassBoardUser.findOne({userId:user._id}).populate("classBoardMapId");
+          if(classBoardUser===null){
+            return res
+            .status(200)
+            .json({ message: "Login successfully", user: user,tokens:tokens,classBoardUser});
+          }
+          const classBoard=await ClassBoardMap.findById({_id:classBoardUser.classBoardMapId._id.toString()}).populate("classId").populate("boardId")
+      
           return res
             .status(200)
-            .json({ message: "Login successfully", user: user,tokens:tokens });
+            .json({ message: "Login successfully", user: user,tokens:tokens,classBoardUser,classBoard});
         } else {
           return res.status(401).json({ message: "Password not matched" });
         }
