@@ -21,9 +21,13 @@ const Quiz=require("./routes/Quiz_route/question_route");
 const InsertUserEducation=require("./routes/User_class_map_route");
 const ClassBoardMapRoute=require("./routes/class_board_map_route");
 const ChapterRoute=require("./routes/chapter_route");
-const QuizUser=require("./routes/Quiz_route/Quiz_user_route")
+const QuizUser=require("./routes/Quiz_route/Quiz_user_route");
 
-const QuizRoute=require("./routes/Quiz_route/quiz_route")
+const QuizRoute=require("./routes/Quiz_route/quiz_route");
+
+//route for amdin
+const AdminLogin=require("./routes/admin_route.js/admin.route");
+
 const app=express();
 app.use(fileupload());
 app.use(express.json());
@@ -48,6 +52,8 @@ app.use("/api",ChapterRoute);
 app.use("/api",QuizRoute);
 app.use("/api",QuizUser);
 
+//admin 
+app.use("/api",AdminLogin)
 
 app.listen(port,()=>{
 console.log(`Server is running on : localhost://${port}`)
