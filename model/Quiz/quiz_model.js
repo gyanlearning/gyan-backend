@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 const quizSchema = new mongoose.Schema({
   name: { type:String,unique:true},
-  startTime:{type:Date},
+  startTime:{type:String},
   endTime:{type:Date},
   duration:{type:String},
   attempDuration:{type:String},

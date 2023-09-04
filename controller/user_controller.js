@@ -40,7 +40,8 @@ const CreateProfile = async (req, res) => {
 // Controller for Get All User
 const GetAllUser = async (req, res) => {
   try {
-    const users = await Profile.find();
+    const users = await Profile.find().populate("userId");
+    
     res.status(200).json({ users: users });
   } catch (err) {
     res.json(createError(500,SERVER_ERR));
