@@ -36,11 +36,12 @@ const insertNewQuizList = async (req, res) => {
     var classBoardId=await classBoardMap.findOne({classId:classId,boardId:boardId});
     
     var classBoardSubjectId=await classBoardSubject.findOne({classBoardMapId:classBoardId._id.toString(),subjectId:subjectId});
-    console.log(classBoardId)
+    
     var classBoardSubjectChapterId=await classBoardSubjectChapter.findOne({classBoardSubjectId:classBoardSubjectId,chapterId:chapterId});
     
-    const questionList=await ClassBoardSubjectChapterQuestion.find({classBoardSubjectChapterId:classBoardSubjectChapterId},{questionId:1,_id:0}).limit(10);
-    
+    var questionList=await ClassBoardSubjectChapterQuestion.find({},{questionId:1,_id:0}).limit(10);
+     if(questionList==null && questionList ===""){
+     }
     const newQuiz = new quiz_Model({
       name,
       startTime,
