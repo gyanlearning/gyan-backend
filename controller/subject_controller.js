@@ -12,7 +12,7 @@ const CreateSubject = async (req, res) => {
     if (await Subject.findOne({ name: req.body.name })) {
       return res.status(203).json({ message: "Subject is already exists" });
     } else {
-      const { name, description } = req.body;
+      const { name, description,boardId,classId} = req.body;
       const newSubject = new Subject({
         name,
         description,
@@ -20,6 +20,12 @@ const CreateSubject = async (req, res) => {
       });
       const isSaved = await newSubject.save();
       if (isSaved) {
+        const classBoardMapId=await classBoardMap.findOne({classId:classId,boardId:boardId});
+        const newClassBoardSubjectMap=await ClassBoardSubject({
+          classBoardMapId:classBoardMapId,
+          subjectId:isSaved._id.toString()
+        });
+        await newClassBoardSubjectMap.save();
         return res.status(200).json({ message: ADDED_SUCCESS, isSaved });
       } else {
         return res.status(501).json({ message: INTERNAL_SERVER_ERROR });
@@ -72,9 +78,9 @@ const getSubjectByClassAndBoard=async(req,res)=>{
   try {
     //const {classId,boardId}=req.body;
     const {classId, boardId} =req.query;
-    console.log('Query ==>>',req.query);
+    
     //console.log(req.body)
-    var Id=await classBoardMap.findOne({classId,boardId});
+    var Id=await classBoardMap.findOne({classId:classId,boardId:boardId});
     
     let isFind=await ClassBoardSubject.find({classBoardMapId:Id._id.toString()}).populate("subjectId");
     if(isFind){
