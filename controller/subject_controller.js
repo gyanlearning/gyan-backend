@@ -87,9 +87,17 @@ const getSubjectByClassAndBoard=async(req,res)=>{
         return res.status(200).json({subject:isFind})   
     }
   } catch (error) {
-    console.log(error)
+   // console.log(error)
     return res.status(501).json({ message: INTERNAL_SERVER_ERROR });
   }
   
 }
-module.exports = { CreateSubject, updateSubject ,deleteSubject,getSubjectByClassAndBoard};
+const getAllSubject=async(req,res)=>{
+  try {
+    let isFind=await Subject.find();
+    return res.status(200).json({message:"successfully ",data:isFind})
+  } catch (error) {
+    return res.status(501).json({ message: INTERNAL_SERVER_ERROR });
+  }
+}
+module.exports = { CreateSubject, updateSubject ,deleteSubject,getSubjectByClassAndBoard,getAllSubject};
