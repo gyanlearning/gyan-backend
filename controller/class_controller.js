@@ -1,12 +1,14 @@
 const Class = require("../model/class_model");
 const { INTERNAL_SERVER_ERROR, EMPTY_BODY } = require("../error");
 const { ObjectId } = require("bson");
+const classBoardMap=require("../model/classBoardMap");
 const AddNewClass = async (req, res) => {
   try {
     if (!req.body) {
       return res.status(203).json({ message: EMPTY_BODY });
     } else {
-      const { className} = req.body;
+      const { className,boardId} = req.body;
+      
       if (await Class.findOne({ className: req.body.className })) {
         res.status(200).json({ message: "Class is already exists" });
       } else {
@@ -14,15 +16,27 @@ const AddNewClass = async (req, res) => {
            className,
         });
         const isSave = await newClass.save();
-        if (isSave) {
+        const isclassBoardMapExist=await  classBoardMap.findOne({boardId:boardId,classId:isSave._id.toString()});
+        if(isclassBoardMapExist){
           res
+          .status(200)
+          .json({ message: "New class is added successfully", json: isSave });
+        }else{
+          const newClassBoardMap=new classBoardMap({
+            boardId:boardId,
+            classId:isSave._id.toString()
+          })
+          if(await newClassBoardMap.save()){
+            res
             .status(200)
             .json({ message: "New class is added successfully", json: isSave });
-        } else {
-          res
-            .status(500)
-            .json({ message: INTERNAL_SERVER_ERROR, error: error });
+          }else {
+            res
+              .status(500)
+              .json({ message: INTERNAL_SERVER_ERROR, error: error });
+          }
         }
+       
       }
     }
   } catch (error) {

@@ -19,7 +19,7 @@ const SubjectRoute=require("./routes/subject_route");
 const TopicRoute=require("./routes/topic_rotue");
 const Quiz=require("./routes/Quiz_route/question_route");
 const InsertUserEducation=require("./routes/User_class_map_route");
-const ClassBoardMapRoute=require("./routes/class_board_map_route");
+
 const ChapterRoute=require("./routes/chapter_route");
 const QuizUser=require("./routes/Quiz_route/Quiz_user_route");
 
@@ -47,7 +47,7 @@ app.use("/api",SubjectRoute);
 app.use("/api",TopicRoute);
 app.use("/api",Quiz);
 app.use("/api",InsertUserEducation);
-app.use("/api",ClassBoardMapRoute);
+
 app.use("/api",ChapterRoute);
 app.use("/api",QuizRoute);
 app.use("/api",QuizUser);
