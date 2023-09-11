@@ -26,13 +26,13 @@ const CreateSubject = async (req, res) => {
           subjectId:isSaved._id.toString()
         });
         await newClassBoardSubjectMap.save();
-        return res.status(200).json({ message: ADDED_SUCCESS, isSaved });
+        return res.status(200).json({ message: ADDED_SUCCESS, data:isSaved });
       } else {
         return res.status(501).json({ message: INTERNAL_SERVER_ERROR });
       }
     }
   } catch (error) {
-    //console.log(error);
+    console.log(error);
     return res.status(501).json({ message: INTERNAL_SERVER_ERROR });
   }
 };
