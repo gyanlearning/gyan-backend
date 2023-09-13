@@ -19,6 +19,7 @@ const questionSchema = new mongoose.Schema(
         },
       },
     ],
+    lang:{type:String,required:true},
    classBoardSubjectChpaterId:{type:mongoose.Schema.Types.ObjectId,ref:"ClassMap"},
     answer:{type:String},
     marks: { type: Number },

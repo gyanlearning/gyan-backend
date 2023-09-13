@@ -13,6 +13,6 @@ router.get("/class", GetClassData);
 router.get("/class/classname", GetClassByName);
 router.patch("/class/:className", UpdateSpecificData);
 router.put("/class/:className", UpdateAllClassData);
-router.delete("/class/:className",DeleteOneClass)
+router.delete("/class/:id",DeleteOneClass)
 
 module.exports = router;
