@@ -1,10 +1,10 @@
-const Subject = require("../model/subject_model");
-const { INTERNAL_SERVER_ERROR, EMPTY_BODY } = require("../utils/error");
-const { UPDATE_SUCCESS, ADDED_SUCCESS } = require("../message");
-const ClassBoardSubject=require("../model/classBoardSubjectMap");
-const classBoardMap=require("../model/classBoardMap");
-
-const CreateSubject = async (req, res) => {
+const Subject = require("../../model/subject_model");
+const { INTERNAL_SERVER_ERROR, EMPTY_BODY } = require("../../utils/error");
+const { UPDATE_SUCCESS, ADDED_SUCCESS } = require("../../message");
+const ClassBoardSubject=require("../../model/classBoardSubjectMap");
+const classBoardMap=require("../../model/classBoardMap");
+const subject={}
+ subject.CreateSubject = async (req, res) => {
   if (req.body.name == null && req.body.description == null) {
     return res.status(203).json({ message: EMPTY_BODY });
   }
@@ -37,7 +37,7 @@ const CreateSubject = async (req, res) => {
   }
 };
 
-const updateSubject = async (req, res) => {
+subject.updateSubject = async (req, res) => {
   if (req.body.name == null && req.body.description == null) {
     return res.status(203).json({ message: EMPTY_BODY });
   }
@@ -61,7 +61,7 @@ const updateSubject = async (req, res) => {
   }
 };
 
-const deleteSubject = async (req, res) => {
+subject.deleteSubject = async (req, res) => {
 
 
   try {
@@ -74,7 +74,7 @@ const deleteSubject = async (req, res) => {
     return res.status(501).json({ message: INTERNAL_SERVER_ERROR });
   }
 };
-const getSubjectByClassAndBoard=async(req,res)=>{
+subject.getSubjectByClassAndBoard=async(req,res)=>{
   try {
     //const {classId,boardId}=req.body;
     const {classId, boardId} =req.query;
@@ -92,7 +92,7 @@ const getSubjectByClassAndBoard=async(req,res)=>{
   }
   
 }
-const getAllSubject=async(req,res)=>{
+subject.getAllSubject=async(req,res)=>{
   try {
     let isFind=await Subject.find();
     return res.status(200).json({message:"successfully ",data:isFind})
@@ -100,4 +100,4 @@ const getAllSubject=async(req,res)=>{
     return res.status(501).json({ message: INTERNAL_SERVER_ERROR });
   }
 }
-module.exports = { CreateSubject, updateSubject ,deleteSubject,getSubjectByClassAndBoard,getAllSubject};
+module.exports = subject;

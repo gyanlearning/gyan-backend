@@ -1,8 +1,8 @@
-const Class = require("../model/class_model");
-const { INTERNAL_SERVER_ERROR, EMPTY_BODY } = require("../utils/error");
-const { ObjectId } = require("bson");
-const classBoardMap=require("../model/classBoardMap");
-const AddNewClass = async (req, res) => {
+const Class = require("../../model/class_model");
+const { INTERNAL_SERVER_ERROR, EMPTY_BODY } = require("../../utils/error");
+const classBoardMap=require("../../model/classBoardMap");
+const classes={};
+classes.AddNewClass = async (req, res) => {
   try {
     if (!req.body) {
       return res.status(203).json({ message: EMPTY_BODY });
@@ -47,7 +47,7 @@ const AddNewClass = async (req, res) => {
   }
 };
 
-const GetClassData = async (req, res) => {
+classes.GetClassData = async (req, res) => {
   try {
     const classData = await Class.find();
     return res
@@ -60,7 +60,7 @@ const GetClassData = async (req, res) => {
   }
 };
 
-const GetClassByName = async (req, res) => {
+classes.GetClassByName = async (req, res) => {
   try {
     const classData = await Class.findOne({ className: req.body.className });
     if (classData !== null) {
@@ -78,7 +78,7 @@ const GetClassByName = async (req, res) => {
       .json({ message: INTERNAL_SERVER_ERROR, error: error });
   }
 };
-const UpdateSpecificData = async (req, res) => {
+classes.UpdateSpecificData = async (req, res) => {
   try {
     if (!req.body) {
       return res.status(203).json({ message: EMPTY_BODY });
@@ -104,7 +104,7 @@ const UpdateSpecificData = async (req, res) => {
   }
 };
 
-const UpdateAllClassData = async (req, res) => {
+classes.UpdateAllClassData = async (req, res) => {
   try {
     if (!req.body) {
       return res.status(203).json({ message: EMPTY_BODY });
@@ -130,7 +130,7 @@ const UpdateAllClassData = async (req, res) => {
       .json({ message: INTERNAL_SERVER_ERROR, error: error });
   }
 };
-const DeleteOneClass = async (req, res) => {
+classes.DeleteOneClass = async (req, res) => {
   try {
     if (!req.body) {
       return res.status(203).json({ message: EMPTY_BODY });
@@ -151,11 +151,4 @@ const DeleteOneClass = async (req, res) => {
       .json({ message: INTERNAL_SERVER_ERROR, error: error });
   }
 };
-module.exports = {
-  AddNewClass,
-  GetClassData,
-  GetClassByName,
-  UpdateSpecificData,
-  UpdateAllClassData,
-  DeleteOneClass,
-};
+module.exports = classes;

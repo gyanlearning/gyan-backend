@@ -1,7 +1,7 @@
 const CreateError = require("../../utils/error");
 const quiz_Model = require("../../model/Quiz/quiz_model");
 //const QuizQuestion=require("../../model/Quiz/quizQuestion_model");
-const ClassBoardSubjectChapterQuestion=require("../../model/Quiz/classBoardSubjectChapterQuestion");
+const ClassBoardSubjectChapterQuestion=require("../../model/classBoardSubjectChapterQuestion");
 const quiz_model = require("../../model/Quiz/quiz_model");
 const createError = require("../../utils/error");
 const { ObjectId } = require("bson");

@@ -1,9 +1,9 @@
-const Board = require("../model/Board_model");
-const { INTERNAL_SERVER_ERROR, EMPTY_BODY } = require("../utils/error");
-const { ObjectId } = require("bson");
-const createError = require("../utils/error");
+const Board = require("../../model/Board_model");
+const { INTERNAL_SERVER_ERROR, EMPTY_BODY } = require("../../utils/error");
 
-const AddNewBoard = async (req, res) => {
+const createError = require("../../utils/error");
+const board={}
+board.AddNewBoard = async (req, res) => {
   try {
     if (!req.body) {
       return res.status(203).json({ message: EMPTY_BODY });
@@ -35,7 +35,7 @@ const AddNewBoard = async (req, res) => {
   }
 };
 
-const GetBoardData = async (req, res) => {
+board.GetBoardData = async (req, res) => {
   try {
     const boardData = await Board.find();
     if (boardData !== null) {
@@ -53,7 +53,7 @@ const GetBoardData = async (req, res) => {
   }
 };
 
-const GetBoardByName = async (req, res) => {
+board.GetBoardByName = async (req, res) => {
   try {
     const boardData = await Board.findOne({ boardName: req.body.boardName });
     if (boardData !== null) {
@@ -71,7 +71,7 @@ const GetBoardByName = async (req, res) => {
       .json({ message: INTERNAL_SERVER_ERROR, error: error });
   }
 };
-const UpdateSpecificBoardData = async (req, res) => {
+board.UpdateSpecificBoardData = async (req, res) => {
   try {
     if (!req.body) {
       return res.status(203).json({ message: EMPTY_BODY });
@@ -97,7 +97,7 @@ const UpdateSpecificBoardData = async (req, res) => {
   }
 };
 
-const UpdateAllBoardData = async (req, res) => {
+board.UpdateAllBoardData = async (req, res) => {
   try {
     if (!req.body) {
       return res.status(203).json({ message: EMPTY_BODY });
@@ -123,7 +123,7 @@ const UpdateAllBoardData = async (req, res) => {
       .json({ message: INTERNAL_SERVER_ERROR, error: error });
   }
 };
-const DeleteOneBoardData = async (req, res) => {
+board.DeleteOneBoardData = async (req, res) => {
   try {
     if (!req.body) {
       return res.status(203).json({ message: EMPTY_BODY });
@@ -144,11 +144,4 @@ const DeleteOneBoardData = async (req, res) => {
       .json({ message: INTERNAL_SERVER_ERROR, error: error });
   }
 };
-module.exports = {
-  AddNewBoard,
-  GetBoardByName,
-  GetBoardData,
-  UpdateAllBoardData,
-  UpdateSpecificBoardData,
-  DeleteOneBoardData,
-};
+module.exports = board;
