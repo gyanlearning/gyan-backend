@@ -1,5 +1,5 @@
 const Class = require("../model/class_model");
-const { INTERNAL_SERVER_ERROR, EMPTY_BODY } = require("../error");
+const { INTERNAL_SERVER_ERROR, EMPTY_BODY } = require("../utils/error");
 const { ObjectId } = require("bson");
 const classBoardMap=require("../model/classBoardMap");
 const AddNewClass = async (req, res) => {

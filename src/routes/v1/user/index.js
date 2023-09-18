@@ -1,17 +1,21 @@
 const express = require("express");
 const router = express.Router();
-const { Login, Logout, Signup } = require("../controller/auth_controller");
+const {
+  Login,
+  Logout,
+  Signup,
+} = require("../../../controller/user/auth_controller");
 const {
   GetAllUser,
   CreateProfile,
   GetUser,
   GetUserByName,
   UpdateProfile,
-} = require("../controller/user_controller");
-const {authenticate} = require("../middleware/jwt");
+} = require("../../../controller/user/user_controller");
+const { authenticate } = require("../../../middleware/jwt");
 
 router.post("/login", Login);
-router.post("/signup",Signup);
+router.post("/signup", Signup);
 router.post("/logout", authenticate, Logout);
 router.get("/user/:id", GetUser);
 router.get("/users", GetAllUser);

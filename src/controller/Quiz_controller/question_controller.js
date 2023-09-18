@@ -8,11 +8,11 @@ const ClassModel = require("../../model/class_model");
 const classBoardMap = require("../../model/classBoardMap");
 const SubjectModel = require("../../model/subject_model");
 const classBoardSubjectChpaterMap = require("../../model/chapter_ClassBoardSubjectMap");
-const CreateError = require("../../error");
+const CreateError = require("../../utils/error");
 const classBoardSubjectMap = require("../../model/classBoardSubjectMap");
 const chapter_model = require("../../model/chapter_model");
 const chapter_ClassBoardSubjectMap = require("../../model/chapter_ClassBoardSubjectMap");
-const ClassBoardSubjectChapterQuestion=require("../../model/Quiz/classBoardSubjectChapterQuestion");
+const ClassBoardSubjectChapterQuestion=require("../../model/classBoardSubjectChapterQuestion");
 //method for create new Question document
 const newQuestionDoc = async (
   title,
@@ -24,6 +24,7 @@ const newQuestionDoc = async (
   subject,
   chapter,
   correctOptions,
+  lang,
   res
 ) => {
   let classId = await ClassModel.findOne({ className: Class });
@@ -50,6 +51,7 @@ const newQuestionDoc = async (
           option4
         },
       ],
+      lang:lang,
       answer:correctOptions,
       classBoardSubjectChpaterId:chapter_ClassBoardSubjectMapId._id.toString()
     });
@@ -110,6 +112,7 @@ const insertQuestion = async (req, res) => {
       Class,
       subject,
       chapter,
+      lang,
       correctOptions,
     } = req.body;
 
@@ -119,6 +122,7 @@ const insertQuestion = async (req, res) => {
       option2,
       option3,
       option4,
+      lang,
       classBoardSubjectChpaterId,
       correctOptions
     );

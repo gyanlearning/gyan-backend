@@ -1,4 +1,4 @@
-const { EMPTY_BODY,INTERNAL_SERVER_ERROR } = require("../error")
+const { EMPTY_BODY,INTERNAL_SERVER_ERROR } = require("../utils/error")
 const Sessions=require("../model/session_model")
 const AddNewSession=async(req,res)=>{
 

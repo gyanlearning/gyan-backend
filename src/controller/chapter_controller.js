@@ -2,7 +2,7 @@ const Chapter = require("../model/chapter_model");
 const ChapterMapping = require("../model/chapter_ClassBoardSubjectMap");
 const cbs_model = require("../model/classBoardSubjectMap");
 const classBoardMap = require("../model/classBoardMap");
-const createError = require("../error");
+const createError = require("../utils/error");
 const insertNewChapter = async (req, res) => {
   try {
     const { classId, boardId, subjectId, name, description } = req.body;

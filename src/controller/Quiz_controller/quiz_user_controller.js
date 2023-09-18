@@ -1,6 +1,6 @@
 const QuizUser = require("../../model/Quiz/quiz_users");
 
-const CreateError = require("../../error");
+const CreateError = require("../../utils/error");
 
 const onSubmit = async (req, res) => {
   try {
