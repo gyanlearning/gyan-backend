@@ -4,14 +4,14 @@ const {
   Login,
   Logout,
   Signup,
-} = require("../../../controller/user/auth_controller");
+} = require("../../../controller/user/authController");
 const {
   GetAllUser,
   CreateProfile,
   GetUser,
   GetUserByName,
   UpdateProfile,
-} = require("../../../controller/user/user_controller");
+} = require("../../../controller/user/userController");
 const { authenticate } = require("../../../middleware/jwt");
 
 router.post("/login", Login);

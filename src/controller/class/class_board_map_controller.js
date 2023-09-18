@@ -1,8 +1,8 @@
-const ClassBoardUserMap = require("../model/classBoardUserMap");
-const ClassBoardMap = require("../model/classBoardMap");
+const ClassBoardUserMap = require("../../model/classBoardUserMap");
+const ClassBoardMap = require("../../model/classBoardMap");
 const CreateError = require("../error.js");
-const ClassModel = require("../model/class_model");
-const Board_model = require("../model/Board_model");
+const ClassModel = require("../../model/class_model");
+const Board_model = require("../../model/Board_model");
 
 const SetMappingforUser=async(req,res)=>{
   if (req.body === "undefined") {

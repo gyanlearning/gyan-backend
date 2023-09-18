@@ -1,9 +1,10 @@
-const Chapter = require("../model/chapter_model");
-const ChapterMapping = require("../model/chapter_ClassBoardSubjectMap");
-const cbs_model = require("../model/classBoardSubjectMap");
-const classBoardMap = require("../model/classBoardMap");
-const createError = require("../utils/error");
-const insertNewChapter = async (req, res) => {
+const Chapter = require("../../model/chapter_model");
+const ChapterMapping = require("../../model/chapter_ClassBoardSubjectMap");
+const cbs_model = require("../../model/classBoardSubjectMap");
+const classBoardMap = require("../../model/classBoardMap");
+const createError = require("../../utils/error");
+const chapter={};
+chapter.insertNewChapter = async (req, res) => {
   try {
     const { classId, boardId, subjectId, name, description } = req.body;
     
@@ -37,7 +38,7 @@ const insertNewChapter = async (req, res) => {
     return res.json(createError(500, "INTERNAL_SERVER ERROR"));
   }
 };
-const getChapterList = async (req, res) => {
+chapter.getChapterList = async (req, res) => {
   try {
     const chapterList = await ChapterMapping.find({}).populate({
       
@@ -61,4 +62,4 @@ const getChapterList = async (req, res) => {
     return res.json(createError(500, "INTERNAL_SERVER ERROR"));
   }
 };
-module.exports = { insertNewChapter, getChapterList };
+module.exports =chapter;
