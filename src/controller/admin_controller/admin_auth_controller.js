@@ -4,7 +4,7 @@ const adminLogin=async(req,res)=>{
         const {email,password}=req.body;
         const isAdmin=await Admin.findOne({email:email,password:password});
         if(isAdmin){
-            return res.status(200).json({message:"Admin login successfully",admin:isAdmin});
+            return res.status(200).json({message:"Admin login successfully",data:isAdmin});
         }else{
             return res.status(401).json({message:"email and password not found "});
 

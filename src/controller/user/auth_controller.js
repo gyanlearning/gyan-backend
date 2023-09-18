@@ -1,14 +1,14 @@
-const User = require("../model/User_model");
-const Profile = require("../model/profile_model");
-const ClassBoardUser = require("../model/classBoardUserMap");
-const ClassBoardMap=require("../model/classBoardMap")
+const User = require("../../routes/v1/user/User_model");
+const Profile = require("../../model/profile_model");
+const ClassBoardUser = require("../../model/classBoardUserMap");
+const ClassBoardMap=require("../../model/classBoardMap")
 const bcryptJs = require("bcrypt");
 //const otplib = require("otplib");
 // const secret = otplib.authenticator.generateSecret();
 // const token = otplib.authenticator.generate(secret);
 // const { SendOtp } = require("../utils/otp.util");
 const jwt = require("jsonwebtoken");
-const { INTERNAL_SERVER_ERROR } = require("../error");
+const { INTERNAL_SERVER_ERROR } = require("../../utils/error");
 
 // const Login = async (req, res) => {
 //   try {

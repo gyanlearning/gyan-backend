@@ -1,5 +1,5 @@
 const Subject = require("../model/subject_model");
-const { INTERNAL_SERVER_ERROR, EMPTY_BODY } = require("../error");
+const { INTERNAL_SERVER_ERROR, EMPTY_BODY } = require("../utils/error");
 const { UPDATE_SUCCESS, ADDED_SUCCESS } = require("../message");
 const ClassBoardSubject=require("../model/classBoardSubjectMap");
 const classBoardMap=require("../model/classBoardMap");

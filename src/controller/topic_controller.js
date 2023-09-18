@@ -1,6 +1,6 @@
 const Topic = require("../model/topic_model");
 const Chapter = require("../model/chapter_model");
-const { INTERNAL_SERVER_ERROR, EMPTY_BODY } = require("../error");
+const { INTERNAL_SERVER_ERROR, EMPTY_BODY } = require("../utils/error");
 const { UPDATE_SUCCESS, ADDED_SUCCESS } = require("../message");
 
 const getClientId = async (chapter_name) => {

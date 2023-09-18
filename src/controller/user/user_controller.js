@@ -1,10 +1,10 @@
-const Profile = require("../model/profile_model");
-const User = require("../model/User_model");
-const { SERVER_ERR } = require("../error");
+const Profile = require("../../model/profile_model");
+const User = require("../../routes/v1/user/User_model");
+const { SERVER_ERR } = require("../../utils/error");
 const bson = require("bson");
 const jwt = require("jsonwebtoken");
-const createError = require("../error");
-const classBoardUserMap = require("../model/classBoardUserMap");
+const createError = require("../../utils/error");
+const classBoardUserMap = require("../../model/classBoardUserMap");
 const CreateProfile = async (req, res) => {
   if (req.body == null) {
     res.status(401).json({ message });

@@ -1,7 +1,7 @@
 const Board = require("../model/Board_model");
-const { INTERNAL_SERVER_ERROR, EMPTY_BODY } = require("../error");
+const { INTERNAL_SERVER_ERROR, EMPTY_BODY } = require("../utils/error");
 const { ObjectId } = require("bson");
-const createError = require("../error");
+const createError = require("../utils/error");
 
 const AddNewBoard = async (req, res) => {
   try {
