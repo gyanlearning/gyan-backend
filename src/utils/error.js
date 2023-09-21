@@ -12,6 +12,7 @@ exports.USER_NOT_FOUND_ERR = "User not found";
 exports.INTERNAL_SERVER_ERROR="Internal server error"
 
  const createError=(statusCode,message)=>{
+    console.log(message)
     const err=new Error();
     err.statusCode=statusCode;
     err.message=message;
