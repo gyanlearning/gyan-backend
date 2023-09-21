@@ -1,10 +1,7 @@
 const express = require("express");
 const router = express.Router();
-const {
-  Login,
-  Logout,
-  Signup,
-} = require("../../../controller/user/authController");
+const { Logout, Signup,userController } = require("../../../controller/user/authController");
+
 const {
   GetAllUser,
   CreateProfile,
@@ -13,8 +10,8 @@ const {
   UpdateProfile,
 } = require("../../../controller/user/userController");
 const { authenticate } = require("../../../middleware/jwt");
-
-router.post("/login", Login);
+//const userController = require("../../../controller/user/authController");
+router.post("/login",userController.LoginController);
 router.post("/signup", Signup);
 router.post("/logout", authenticate, Logout);
 router.get("/user/:id", GetUser);

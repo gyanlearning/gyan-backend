@@ -8,7 +8,7 @@ const bcryptJs = require("bcrypt");
 // const token = otplib.authenticator.generate(secret);
 // const { SendOtp } = require("../utils/otp.util");
 const jwt = require("jsonwebtoken");
-const { INTERNAL_SERVER_ERROR } = require("../../utils/error");
+const { INTERNAL_SERVER_ERROR, USER_NOT_FOUND_ERR } = require("../../utils/error");
 
 // const Login = async (req, res) => {
 //   try {
@@ -86,8 +86,11 @@ const { INTERNAL_SERVER_ERROR } = require("../../utils/error");
 // };
 
 //Logout
-
-const Login = async (req, res) => {
+const userService=require("../../service/userService");
+const createError = require("../../utils/error");
+const userController={};
+ userController.LoginController = async (req, res) => {
+  let userDetails;
   if (req.body === "undefined") {
     return res.status(204).json({ message: "Body is empty!" });
   }
@@ -96,34 +99,41 @@ const Login = async (req, res) => {
     if (mobile && password === "") {
       return res.status(204).json({ message: "Email or password empty" });
     } else {
-      const user = await User.findOne({ mobile: mobile });
-      if (user) {
-        const isMatch = await bcryptJs.compare(password, user.password);
-        if (isMatch) {
-          const tokens = jwt.sign(
-            { user: user._id },
-            process.env.JWT_SECRET_KEY,
-            {
-              expiresIn: "10d",
-            }
-          );
+      //const user = await User.findOne({ mobile: mobile });
+      userDetails=await userService.login(mobile,password)
+      if(userDetails===USER_NOT_FOUND_ERR){
+        return res.json(createError(203,"USER_NOT_FOUND"))
+      }
+      if (userDetails===null || userDetails==="PASSWORD_NOT_MATCHED") {
+        
+        return res.status(401).json({ message: "Password not matched" });
+        //const isMatch = await bcryptJs.compare(password, user.password);
+        // if (isMatch) {
+        //   const tokens = jwt.sign(
+        //     { user: user._id },
+        //     process.env.JWT_SECRET_KEY,
+        //     {
+        //       expiresIn: "10d",
+        //     }
+        //   );
           
-          const classBoardUser = await ClassBoardUser.findOne({userId:user._id}).populate("classBoardMapId");
-          if(classBoardUser===null){
-            return res
-            .status(200)
-            .json({ message: "Login successfully", user: user,tokens:tokens,classBoardUser});
-          }
-          const classBoard=await ClassBoardMap.findById({_id:classBoardUser.classBoardMapId._id.toString()}).populate("classId").populate("boardId")
+          // const classBoardUser = await ClassBoardUser.findOne({userId:user._id}).populate("classBoardMapId");
+          // if(classBoardUser===null){
+          //   return res
+          //   .status(200)
+          //   .json({ message: "Login successfully", user: user,tokens:tokens,classBoardUser});
+          // }
+          // const classBoard=await ClassBoardMap.findById({_id:classBoardUser.classBoardMapId._id.toString()}).populate("classId").populate("boardId")
       
-          return res
-            .status(200)
-            .json({ message: "Login successfully", user: user,tokens:tokens,classBoardUser,classBoard});
-        } else {
-          return res.status(401).json({ message: "Password not matched" });
-        }
-      } else {
-        return res.status(404).json({ message: "User not found " });
+          // return res
+          //   .status(200)
+          //   .json({ message: "Login successfully", user: user,tokens:tokens,classBoardUser,classBoard});
+         } else {
+        //   return res.status(401).json({ message: "Password not matched" });
+        // }
+      
+        //return res.status(404).json({ message: "User not found " });
+        return res.status(200).json({message:"Login success"});
       }
     }
   } catch (error) {
@@ -133,6 +143,7 @@ const Login = async (req, res) => {
 };
 
 const Signup = async (req, res) => {
+  console.log("hd")
   if (req.body === "undefined") {
     return res.status(304).json({ message: "Body is empty!" });
   }
@@ -203,4 +214,4 @@ const Logout = (req, res) => {
   removeLocalStorage("user").status(201).send("user has been logout");
 };
 
-module.exports = { Login, Logout, Signup };
+module.exports = {userController,  Logout, Signup };
