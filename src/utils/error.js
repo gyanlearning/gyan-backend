@@ -6,6 +6,8 @@ exports.AUTH_HEADER_MISSING_ERR = "auth header is missing";
 
 exports.AUTH_TOKEN_MISSING_ERR = "auth token is missing";
 
+exports.AUTh_TOKEN_GENERATE_FALE="FAILED TO GENEREATE AUTH TOKEN";
+
 exports.JWT_DECODE_ERR = "incorrect token";
 
 exports.USER_NOT_FOUND_ERR = "User not found";
