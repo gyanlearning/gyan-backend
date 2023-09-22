@@ -1,14 +1,18 @@
 const User = require("../../routes/v1/user/User_model");
 const Profile = require("../../model/profile_model");
 const ClassBoardUser = require("../../model/classBoardUserMap");
-const ClassBoardMap=require("../../model/classBoardMap")
+const ClassBoardMap = require("../../model/classBoardMap");
 const bcryptJs = require("bcrypt");
 //const otplib = require("otplib");
 // const secret = otplib.authenticator.generateSecret();
 // const token = otplib.authenticator.generate(secret);
 // const { SendOtp } = require("../utils/otp.util");
 const jwt = require("jsonwebtoken");
-const { INTERNAL_SERVER_ERROR, USER_NOT_FOUND_ERR } = require("../../utils/error");
+const {
+  INTERNAL_SERVER_ERROR,
+  USER_NOT_FOUND_ERR,
+  SERVER_ERR,
+} = require("../../utils/error");
 
 // const Login = async (req, res) => {
 //   try {
@@ -86,10 +90,14 @@ const { INTERNAL_SERVER_ERROR, USER_NOT_FOUND_ERR } = require("../../utils/error
 // };
 
 //Logout
-const userService=require("../../service/userService");
+const userService = require("../../service/userService");
 const createError = require("../../utils/error");
-const userController={};
- userController.LoginController = async (req, res) => {
+const { USER_ALREDADY_EXISTS } = require("../../message");
+const statusCode = require("../../message");
+const { jwtService } = require("../../routes/v1/middleware/jwt");
+const userController = {};
+
+userController.LoginController = async (req, res) => {
   let userDetails;
   if (req.body === "undefined") {
     return res.status(204).json({ message: "Body is empty!" });
@@ -100,12 +108,11 @@ const userController={};
       return res.status(204).json({ message: "Email or password empty" });
     } else {
       //const user = await User.findOne({ mobile: mobile });
-      userDetails=await userService.login(mobile,password)
-      if(userDetails===USER_NOT_FOUND_ERR){
-        return res.json(createError(203,"USER_NOT_FOUND"))
+      userDetails = await userService.login(mobile, password);
+      if (userDetails === USER_NOT_FOUND_ERR) {
+        return res.json(createError(203, "USER_NOT_FOUND"));
       }
-      if (userDetails===null || userDetails==="PASSWORD_NOT_MATCHED") {
-        
+      if (userDetails === null || userDetails === "PASSWORD_NOT_MATCHED") {
         return res.status(401).json({ message: "Password not matched" });
         //const isMatch = await bcryptJs.compare(password, user.password);
         // if (isMatch) {
@@ -116,24 +123,28 @@ const userController={};
         //       expiresIn: "10d",
         //     }
         //   );
-          
-          // const classBoardUser = await ClassBoardUser.findOne({userId:user._id}).populate("classBoardMapId");
-          // if(classBoardUser===null){
-          //   return res
-          //   .status(200)
-          //   .json({ message: "Login successfully", user: user,tokens:tokens,classBoardUser});
-          // }
-          // const classBoard=await ClassBoardMap.findById({_id:classBoardUser.classBoardMapId._id.toString()}).populate("classId").populate("boardId")
-      
-          // return res
-          //   .status(200)
-          //   .json({ message: "Login successfully", user: user,tokens:tokens,classBoardUser,classBoard});
-         } else {
+
+        // const classBoardUser = await ClassBoardUser.findOne({userId:user._id}).populate("classBoardMapId");
+        // if(classBoardUser===null){
+        //   return res
+        //   .status(200)
+        //   .json({ message: "Login successfully", user: user,tokens:tokens,classBoardUser});
+        // }
+        // const classBoard=await ClassBoardMap.findById({_id:classBoardUser.classBoardMapId._id.toString()}).populate("classId").populate("boardId")
+
+        // return res
+        //   .status(200)
+        //   .json({ message: "Login successfully", user: user,tokens:tokens,classBoardUser,classBoard});
+      } else {
         //   return res.status(401).json({ message: "Password not matched" });
         // }
-      
+
         //return res.status(404).json({ message: "User not found " });
-        return res.status(200).json({message:"Login success"});
+        const token=await jwtService.jwtSignToken(userDetails);
+        if(token===createError.AUTh_TOKEN_GENERATE_FALE){
+          return res.status(200).json({ message: "Login success",token:"Failed to generate" });
+        }
+        return res.status(200).json({ message: "Login success",token ,data:userDetails});
       }
     }
   } catch (error) {
@@ -142,63 +153,70 @@ const userController={};
   }
 };
 
-const Signup = async (req, res) => {
-  console.log("hd")
+userController.SignupController = async (req, res) => {
   if (req.body === "undefined") {
     return res.status(304).json({ message: "Body is empty!" });
   }
   try {
-    const {
-      mobile,
-      password,
-      firstName,
-      lastName,
-      email,
- 
-    } = req.body;
+    const { mobile, password, firstName, lastName, email } = req.body;
     if (mobile && password === "") {
       return res.status(304).json({ message: "Email or password empty" });
     } else {
-      const isUser = await User.findOne({ mobile });
-      if (isUser) {
-        return res.status(409).json({ message: "User already exists. Please SignIn" });
-      } else {
-        const hashPassword = await bcryptJs.hash(password, 10);
+      // const isUser = await User.findOne({ mobile });
+      // if (isUser) {
+      //   return res.status(409).json({ message: "User already exists. Please SignIn" });
+      // } else {
+      const hashPassword = await bcryptJs.hash(password, 10);
 
-        const newUser = await User({ mobile, password: hashPassword });
-        if (newUser) {
-          const isSaved = await newUser.save();
-          if (isSaved) {
-            const newProfile = new Profile({
-              firstName,
-              lastName,
-              userId: isSaved._id,
-              email:email,
-            });
-            if (await newProfile.save()) {
-              const tokens = jwt.sign(
-                { user: isSaved._id },
-                process.env.JWT_SECRET_KEY,
-                {
-                  expiresIn: "10d",
-                }
-              );
-              res.set("token",tokens)
-             // await User.findOneAndUpdate({_id:isSaved._id},{token:tokens},{new :true});
-              return res
-                .status(200)
-                .json({
-                  message: "Successfully created new account",
-                  user: newProfile,token:tokens
-                });
-            } else {
-              return res
-                .status(400)
-                .json({ message: "Error while processing data" });
-            }
-          }
-        }
+      // const newUser = await User({ mobile, password: hashPassword });
+      // if (newUser) {
+      //   const isSaved = await newUser.save();
+      //   if (isSaved) {
+      //     const newProfile = new Profile({
+      //       firstName,
+      //       lastName,
+      //       userId: isSaved._id,
+      //       email:email,
+      //     });
+      //     if (await newProfile.save()) {
+      //       const tokens = jwt.sign(
+      //         { user: isSaved._id },
+      //         process.env.JWT_SECRET_KEY,
+      //         {
+      //           expiresIn: "10d",
+      //         }
+      //       );
+      //       res.set("token",tokens)
+      //      // await User.findOneAndUpdate({_id:isSaved._id},{token:tokens},{new :true});
+      //       return res
+      //         .status(200)
+      //         .json({
+      //           message: "Successfully created new account",
+      //           user: newProfile,token:tokens
+      //         });
+      //     } else {
+      //       return res
+      //         .status(400)
+      //         .json({ message: "Error while processing data" });
+      //     }
+      //   }
+      // }
+      let savedProfile = await userService.signup(
+        mobile,
+        hashPassword,
+        firstName,
+        lastName
+      );
+      if (savedProfile === SERVER_ERR) {
+        return res.json(createError(statusCode.UNPROCESSABLE, SERVER_ERR));
       }
+      if (savedProfile === USER_ALREDADY_EXISTS) {
+        return res.json(createError(203, "USER_ALREDADY_EXISTS"));
+      }
+      const token=await jwtService.jwtSignToken(savedProfile)
+      return res
+        .status(statusCode.CREATED)
+        .json({ message: "Successfully signup", data: savedProfile,token:token });
     }
   } catch (error) {
     console.log(error);
@@ -213,5 +231,6 @@ const Logout = (req, res) => {
   });
   removeLocalStorage("user").status(201).send("user has been logout");
 };
+const { SignupController, LoginController } = userController;
 
-module.exports = {userController,  Logout, Signup };
+module.exports = { SignupController, Logout, LoginController };

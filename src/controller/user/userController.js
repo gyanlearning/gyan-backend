@@ -52,7 +52,8 @@ const GetUser = async (req, res) => {
   try {
     if (req.user !== "undefined" && req.user !== "") {
       const userId = req.params.id;
-      const currentUser = await User.findOne({ userId });
+      
+      const currentUser = await Profile.findOne({userId: userId }).populate("userId");
       
       if (currentUser) {
         return res.status(200).json({ user: currentUser });
