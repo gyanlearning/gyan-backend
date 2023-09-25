@@ -1,7 +1,7 @@
-const User = require("../../routes/v1/user/User_model");
-const Profile = require("../../model/profile_model");
-const ClassBoardUser = require("../../model/classBoardUserMap");
-const ClassBoardMap = require("../../model/classBoardMap");
+//const User = require("../../routes/v1/user/userModel");
+//const Profile = require("../../model/profile_model");
+// const ClassBoardUser = require("../../model/classBoardUserMap");
+// const ClassBoardMap = require("../../model/classBoardMap");
 const bcryptJs = require("bcrypt");
 //const otplib = require("otplib");
 // const secret = otplib.authenticator.generateSecret();
@@ -12,7 +12,7 @@ const {
   INTERNAL_SERVER_ERROR,
   USER_NOT_FOUND_ERR,
   SERVER_ERR,
-} = require("../../utils/error");
+} = require("../../../utils/error");
 
 // const Login = async (req, res) => {
 //   try {
@@ -90,11 +90,11 @@ const {
 // };
 
 //Logout
-const userService = require("../../service/userService");
-const createError = require("../../utils/error");
-const { USER_ALREDADY_EXISTS } = require("../../message");
-const statusCode = require("../../message");
-const { jwtService } = require("../../routes/v1/middleware/jwt");
+const userService = require("../../../service/userService/userService");
+const createError = require("../../../utils/error");
+const { USER_ALREDADY_EXISTS } = require("../../../message");
+const statusCode = require("../../../message");
+const { jwtService } = require("../../../routes/v1/middleware/jwt");
 const userController = {};
 
 userController.LoginController = async (req, res) => {
@@ -207,10 +207,11 @@ userController.SignupController = async (req, res) => {
         firstName,
         lastName
       );
+      
       if (savedProfile === SERVER_ERR) {
         return res.json(createError(statusCode.UNPROCESSABLE, SERVER_ERR));
       }
-      if (savedProfile === USER_ALREDADY_EXISTS) {
+      if (savedProfile === "USER_ALREADY_EXISTS") {
         return res.json(createError(203, "USER_ALREDADY_EXISTS"));
       }
       const token=await jwtService.jwtSignToken(savedProfile)
