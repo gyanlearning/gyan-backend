@@ -1,5 +1,5 @@
 const router=require("express").Router();
-const user=require("./user/index");
+const user=require("./userRoute/user/index.js");
 const admin=require("./admin");
 const classes=require("./class")
 const board=require("./board")

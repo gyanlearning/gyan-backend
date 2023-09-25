@@ -1,10 +1,11 @@
-const Profile = require("../../model/profile_model");
-const User = require("../../routes/v1/user/User_model");
-const { SERVER_ERR } = require("../../utils/error");
+const Profile = require("../../../model/profile_model");
+const User = require("../../../routes/v1/userRoute/user/userModel");
+const { SERVER_ERR } = require("../../../utils/error");
 const bson = require("bson");
 const jwt = require("jsonwebtoken");
-const createError = require("../../utils/error");
-const classBoardUserMap = require("../../model/classBoardUserMap");
+const createError = require("../../../utils/error");
+const classBoardUserMap = require("../../../model/classBoardUserMap");
+const userServices = require("../../../service/userService/userService");
 const CreateProfile = async (req, res) => {
   if (req.body == null) {
     res.status(401).json({ message });
@@ -53,7 +54,7 @@ const GetUser = async (req, res) => {
     if (req.user !== "undefined" && req.user !== "") {
       const userId = req.params.id;
       
-      const currentUser = await Profile.findOne({userId: userId }).populate("userId");
+      const currentUser = await userServices.getUserById(userId)
       
       if (currentUser) {
         return res.status(200).json({ user: currentUser });

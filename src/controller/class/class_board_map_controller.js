@@ -10,7 +10,7 @@ const SetMappingforUser=async(req,res)=>{
   }
   try{
     const {userId,classId,boardId}=req.body
-   
+    
     if(userId===null && userId==='undefined' && !userId){
       return res.CreateError(304,"UserId not found");
     }else {
@@ -29,8 +29,7 @@ const SetMappingforUser=async(req,res)=>{
       if(isSaved){
        const current_doc=await isSaved.populate("classBoardMapId");
        const classBoard=await ClassBoardMap.findById({_id:current_doc.classBoardMapId._id.toString()}).populate("classId").populate("boardId")
-      
-       
+           
         return res.status(201).json({message:"User maped with class and board",classBoardUser:isSaved,classBoard})
       }
       } else {

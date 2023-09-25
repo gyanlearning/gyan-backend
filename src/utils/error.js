@@ -9,12 +9,11 @@ exports.AUTH_TOKEN_MISSING_ERR = "auth token is missing";
 exports.AUTh_TOKEN_GENERATE_FALE="FAILED TO GENEREATE AUTH TOKEN";
 
 exports.JWT_DECODE_ERR = "incorrect token";
-
+exports.USER_ALREDADY_EXISTS = "USER ALREDADY EXISTS";
 exports.USER_NOT_FOUND_ERR = "User not found";
 exports.INTERNAL_SERVER_ERROR="Internal server error"
 
  const createError=(statusCode,message)=>{
-    console.log(message)
     const err=new Error();
     err.statusCode=statusCode;
     err.message=message;

@@ -1,6 +1,6 @@
 exports.UPDATE_SUCCESS="Document is successfully update";
 exports.ADDED_SUCCESS="New document is successfully added";
-exports.USER_ALREDADY_EXISTS="USER_ALREDADY_EXISTS";
+
 
 let statusCode = {
     HTTP_SUCCESS: 200,
