@@ -3,8 +3,8 @@ const { SERVER_ERR } = require("../../utils/error");
 
 const classBoardMapRepo = {};
 //respositry for class-board map
-//check userMap is available or not
-classBoardMapRepo.findUserById = async (userId) => {
+//check userMap is avcailable or not
+classBoardMapRepo.getClassMapByUserId = async (userId) => {
   try {
     const isclassBoardMapExists = await userClassBoardMap.findOne({
       userId: userId,
@@ -20,13 +20,12 @@ classBoardMapRepo.findUserById = async (userId) => {
 };
 
 //add new class board to the user profile
-classBoardMapRepo.addClassBoard = async (classId, boardId, userId) => {
+classBoardMapRepo.addClassBoard = async (userId, classBoardMapId) => {
   try {
     let classBoardMap;
     classBoardMap = new userClassBoardMap({
-      classId: classId,
-      boardId: boardId,
       userId: userId,
+      classBoardMapId: classBoardMapId,
     });
     const isSaved = await classBoardMap.save();
     if (isSaved !== null || isSaved !== undefined) {
@@ -37,23 +36,40 @@ classBoardMapRepo.addClassBoard = async (classId, boardId, userId) => {
     return SERVER_ERR;
   }
 };
-classBoardMapRepo.updateClassBoard = async (userId, classId, boardId) => {
+classBoardMapRepo.update = async (userId, classBoardMapId) => {
   try {
-    const updateClassBoardMap = await userClassBoardMap.findByIdAndUpdate(
+    const updateClassBoardMap = await userClassBoardMap.findOneAndUpdate(
       {
         userId: userId,
       },
-      { classId: classId, boardId: boardId }
+      { classBoardMapId: classBoardMapId }
     );
+
     if (updateClassBoardMap == null || updateClassBoardMap == undefined) {
       return SERVER_ERR;
     }
     return updateClassBoardMap;
   } catch (error) {
-    console.log(error);
+    // console.log(error);
     return SERVER_ERR;
   }
 };
-const { addClassBoard, updateClassBoard, findUserById } =
+classBoardMapRepo.readClassBoard = async (userId) => {
+  try {
+    const classBoard = await userClassBoardMap
+      .findOne({ userId: userId })
+      .populate({
+        path: "classBoardMapId",
+        populate: {
+          path: "classId boardId",
+        },
+      });
+
+    return classBoard;
+  } catch (error) {
+    return SERVER_ERR;
+  }
+};
+const { addClassBoard, update, getClassMapByUserId, readClassBoard } =
   classBoardMapRepo;
-module.exports = { addClassBoard, updateClassBoard, findUserById};
+module.exports = { addClassBoard, update, getClassMapByUserId, readClassBoard };

@@ -14,33 +14,34 @@ const removeLocalStorage = (key) => {
 };
 const jwtService = {};
 
-jwtService.authenticate = (req, res, next) => {
+jwtService.authenticate =async (req, res, next) => {
   const bearerHeader = req.headers.authorization;
   
-  try {
+  
    if(typeof bearerToken !==undefined ){
        const bearer=bearerHeader.split(' ');
-       const bearerToken=bearer[0];
-
+       const bearerToken=bearer[1];
+       
    
   // if (!tokens) {
   //   return res.status(401).json({ error: "Unauthorized" });
   // }
 
   
-    jwt.verify(bearerToken, process.env.JWT_SECRET_KEY, function (err, data) {
-      if (err) {
-        //console.log(typeof err.message);
-        return err.message;
-      }
-      req.user = data;
-    });
-
-    next();
-  }
-  } catch (err) {
-    return res.status(401).json({ error: "Invalid token", err });
-  }
+  return jwt.verify(bearerToken,  process.env.JWT_SECRET_KEY, function(err, decoded) {
+    if (err) {
+      
+        return res.json({
+            success: false,
+            message: "Failed to authenticate token.",
+        });
+    }
+    req.user = decoded;
+    return next();
+  
+  })
+}
+ 
 };
 
 const isAuth = () => {
@@ -56,7 +57,7 @@ const isAuth = () => {
 jwtService.jwtSignToken = async (userId) => {
   
   let tokens = jwt.sign({ userId }, process.env.JWT_SECRET_KEY, {
-    expiresIn: "3s",
+    expiresIn: "3d",
   });
   
   if(tokens===null || tokens ===undefined){

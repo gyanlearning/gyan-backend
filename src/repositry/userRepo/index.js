@@ -1,13 +1,15 @@
-const {addClassBoard, updateClassBoard, findByIdAndUpdate}=require("./classBoardMapRepository");
+const {addClassBoard, update, getClassMapByUserId,readClassBoard}=require("./classBoardMapRepository");
 const {createProfile,getUserById,getUserDetailsById,getUserDetailsByNumber}=require("./UserRepository");
 const respositry={
     addClassBoard:addClassBoard,
-    updateClassBoard:updateClassBoard,
-    findUserById:findUserById,
+    update:update,
+    getClassMapByUserId:getClassMapByUserId,
     createProfile:createProfile,
     getUserById:getUserById,
     getUserDetailsById:getUserDetailsById,
-    getUserDetailsByNumber:getUserDetailsByNumber
+    getUserDetailsByNumber:getUserDetailsByNumber,
+    readClassBoard:readClassBoard
+
 }
 
 module.exports=respositry;

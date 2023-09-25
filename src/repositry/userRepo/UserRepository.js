@@ -72,6 +72,6 @@ userRepo.createProfile = async (mobile, password, firstName, lastName) => {
     return error;
   }
 };
-const {createProfile,getUserById,getUserDetailsById,getUserDetailsByNumber}=userRepo;
+const {createProfile,getUserById,getUserDetailsById,getUserDetailsByNumber,findUs}=userRepo;
 
 module.exports = {createProfile,getUserById,getUserDetailsById,getUserDetailsByNumber};
