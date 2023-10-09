@@ -1,14 +1,17 @@
 
+
 const express=require("express");
-const dotenv=require("dotenv");
+const config=require("./config");
 const fileupload=require("express-fileupload");
 const bodyParser =require("body-parser");
-const port=process.env.port || 3000;
-dotenv.config();
+
+const port=config.port || 3000;
+
 //Conecting to db
 require("./db/conection")
+
 const cors=require("cors");
-const router=express.Router();
+
 const cookieParser=require("cookie-parser");
 const v1=require("./routes/v1/index")
 
@@ -19,7 +22,7 @@ app.use(bodyParser.urlencoded({extended:true}));
 app.use(bodyParser.json({
     type: ["application/x-www-form-urlencoded", "application/json"], // Support json encoded bodies
   }));
-app.use(cors({origin:"http://localhost:3001",credentials:true }));
+app.use(cors());
 app.use(cookieParser())
 app.use(express.static(__dirname + '/public'));
 app.use("/api/v1",v1);
