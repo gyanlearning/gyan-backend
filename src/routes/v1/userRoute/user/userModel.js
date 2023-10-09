@@ -6,6 +6,10 @@ const userSchema = mongoose.Schema(
     mobile: { type: String, required: true },
     password: { type: String, required: true },
     latLong:{type:ObjectId},
+    role:{
+        type:String,
+        
+    },
     token:{type:ObjectId},
     createdAt:{type:Date},
     updatedAt:{type:Date},

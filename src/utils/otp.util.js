@@ -1,8 +1,8 @@
 const twilio = require('twilio');
-
+const config=require("../config")
 const SendOtp = async (mobile,otp) => {
-  const accountSid = process.env.ACCOUNT_SID;
-  const authToken = process.env.ACCOUNT_TOKEN
+  const accountSid = config.ACCOUNT_SID;
+  const authToken = config.ACCOUNT_TOKEN
   const client = new twilio(accountSid, authToken);
   
   client.messages

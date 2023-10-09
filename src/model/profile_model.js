@@ -4,23 +4,23 @@ const profileSchema = mongoose.Schema(
     firstName: { type: String, required: true },
     lastName: { type: String, required: true },
     userId: { type: mongoose.Schema.Types.ObjectId },
-    address: [
-      {
-        village: {
-          type: String,
-        },
-        district: {
-          type: String,
-        },
-        pincode: {
-          type: Number,
-        },
-        state: {
-          type: String,
-        },
-        //country: {"India"},
-      },
-    ],
+    // address: [
+    //   {
+    //     village: {
+    //       type: String,
+    //     },
+    //     district: {
+    //       type: String,
+    //     },
+    //     pincode: {
+    //       type: Number,
+    //     },
+    //     state: {
+    //       type: String,
+    //     },
+    //     //country: {"India"},
+    //   },
+    // ],
     email: { type: String },
     avtar: { type: String },
     userId: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
