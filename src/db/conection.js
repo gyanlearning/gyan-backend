@@ -1,7 +1,7 @@
 const mongoose=require("mongoose");
 const config=require("../config")
 
-mongoose.connect(config.DB_PATH,{
+mongoose.connect(`${config.DB_PATH}`,{
     useNewUrlParser:true,
     useUnifiedTopology:true,
     family:4,
