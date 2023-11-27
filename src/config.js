@@ -1,4 +1,4 @@
-
+require("dotenv").config();
 module.exports={
     port:process.env.PORT,
     DB_PATH:process.env.DB_PATH,
