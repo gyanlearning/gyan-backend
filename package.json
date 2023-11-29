@@ -2,9 +2,11 @@
   "name": "gyan-backend",
   "version": "1.0.0",
   "description": "backend for the gyan application",
-  "main": "index.js",
+  "main": "app.js",
   "scripts": {
-    "start": "node index.js",
+    "start": "node src/app.js",
+    "dev":"node src/app.js",
+    "prod":"node src/app.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "gaurav",
