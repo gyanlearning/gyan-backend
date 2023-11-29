@@ -4,8 +4,8 @@ const express = require("express");
 const config = require("./config");
 const fileupload = require("express-fileupload");
 const bodyParser = require("body-parser");
-const fs = require("fs");
-const https = require("https");
+// const fs = require("fs");
+// const https = require("https");
 
 const port = config.port || 3000;
 
@@ -33,11 +33,14 @@ app.use(cookieParser());
 app.use(express.static(__dirname + "/public"));
 app.use("/api/v1", v1);
 
-https
-  .createServer({
-    key: fs.readFileSync("key.pem"),
-    cert: fs.readFileSync("cert.pem"),
-  })
-  .listen(port, () => {
-    console.log(`Server is running on : localhost://${port}`);
-  });
+app.listen(port,()=>{
+  console.log(`Server is running on :${port}`);
+})
+// https
+//   .createServer({
+//     key: fs.readFileSync("key.pem"),
+//     cert: fs.readFileSync("cert.pem"),
+//   })
+//   .listen(port, () => {
+//     console.log(`Server is running on : localhost://${port}`);
+//   });
