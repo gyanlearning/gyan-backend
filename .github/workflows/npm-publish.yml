@@ -8,7 +8,7 @@ jobs:
     build:
         env:
           CI : true
-          MONGO_URL: mongodb://localhost/blog
+          MONGO_URL: mongodb://localhost/gyanDb
         strategy:
             matrix: 
                 node-version: [18.x]
